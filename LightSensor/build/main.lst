@@ -1,0 +1,1468 @@
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s 			page 1
+
+
+   1              		.cpu cortex-m0plus
+   2              		.arch armv6s-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 0
+  12              		.eabi_attribute 18, 4
+  13              		.file	"main.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.data.message,"aw"
+  18              		.align	2
+  21              	message:
+  22 0000 48656C6C 		.ascii	"Hello World!\015\012\000"
+  22      6F20576F 
+  22      726C6421 
+  22      0D0A00
+  23              		.global	UART_RingBuffer_Tx
+  24              		.section	.bss.UART_RingBuffer_Tx,"aw",%nobits
+  25              		.align	2
+  28              	UART_RingBuffer_Tx:
+  29 0000 00000000 		.space	20
+  29      00000000 
+  29      00000000 
+  29      00000000 
+  29      00000000 
+  30              		.global	RingBufferData_Tx
+  31              		.section	.bss.RingBufferData_Tx,"aw",%nobits
+  32              		.align	2
+  35              	RingBufferData_Tx:
+  36 0000 00000000 		.space	1024
+  36      00000000 
+  36      00000000 
+  36      00000000 
+  36      00000000 
+  37              		.global	UART_RingBuffer_Rx
+  38              		.section	.bss.UART_RingBuffer_Rx,"aw",%nobits
+  39              		.align	2
+  42              	UART_RingBuffer_Rx:
+  43 0000 00000000 		.space	20
+  43      00000000 
+  43      00000000 
+  43      00000000 
+  43      00000000 
+  44              		.global	RingBufferData_Rx
+  45              		.section	.bss.RingBufferData_Rx,"aw",%nobits
+  46              		.align	2
+  49              	RingBufferData_Rx:
+  50 0000 00000000 		.space	1024
+  50      00000000 
+  50      00000000 
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s 			page 2
+
+
+  50      00000000 
+  50      00000000 
+  51              		.global	Response_Rx
+  52              		.section	.bss.Response_Rx,"aw",%nobits
+  53              		.align	2
+  56              	Response_Rx:
+  57 0000 00000000 		.space	1024
+  57      00000000 
+  57      00000000 
+  57      00000000 
+  57      00000000 
+  58              		.global	uart_rx_buffer
+  59              		.section	.bss.uart_rx_buffer,"aw",%nobits
+  62              	uart_rx_buffer:
+  63 0000 00       		.space	1
+  64              		.global	readyToRead
+  65              		.section	.bss.readyToRead,"aw",%nobits
+  68              	readyToRead:
+  69 0000 00       		.space	1
+  70              		.global	readyToSend
+  71              		.section	.bss.readyToSend,"aw",%nobits
+  74              	readyToSend:
+  75 0000 00       		.space	1
+  76              		.global	sensor1
+  77              		.section	.bss.sensor1,"aw",%nobits
+  78              		.align	2
+  81              	sensor1:
+  82 0000 00000000 		.space	8
+  82      00000000 
+  83              		.section	.text.HAL_UART_TxCpltCallback,"ax",%progbits
+  84              		.align	1
+  85              		.global	HAL_UART_TxCpltCallback
+  86              		.syntax unified
+  87              		.code	16
+  88              		.thumb_func
+  90              	HAL_UART_TxCpltCallback:
+  91              	.LFB50:
+  92              		.file 1 "Core/Src/main.c"
+   1:Core/Src/main.c **** /* USER CODE BEGIN Header */
+   2:Core/Src/main.c **** /**
+   3:Core/Src/main.c ****   ******************************************************************************
+   4:Core/Src/main.c ****   * @file           : main.c
+   5:Core/Src/main.c ****   * @brief          : Main program body
+   6:Core/Src/main.c ****   ******************************************************************************
+   7:Core/Src/main.c ****   * @attention
+   8:Core/Src/main.c ****   *
+   9:Core/Src/main.c ****   * Copyright (c) 2022 STMicroelectronics.
+  10:Core/Src/main.c ****   * All rights reserved.
+  11:Core/Src/main.c ****   *
+  12:Core/Src/main.c ****   * This software is licensed under terms that can be found in the LICENSE file
+  13:Core/Src/main.c ****   * in the root directory of this software component.
+  14:Core/Src/main.c ****   * If no LICENSE file comes with this software, it is provided AS-IS.
+  15:Core/Src/main.c ****   *
+  16:Core/Src/main.c ****   ******************************************************************************
+  17:Core/Src/main.c ****   */
+  18:Core/Src/main.c **** /* USER CODE END Header */
+  19:Core/Src/main.c **** /* Includes ------------------------------------------------------------------*/
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s 			page 3
+
+
+  20:Core/Src/main.c **** #include "main.h"
+  21:Core/Src/main.c **** #include "i2c.h"
+  22:Core/Src/main.c **** #include "usart.h"
+  23:Core/Src/main.c **** #include "gpio.h"
+  24:Core/Src/main.c **** 
+  25:Core/Src/main.c **** /* Private includes ----------------------------------------------------------*/
+  26:Core/Src/main.c **** /* USER CODE BEGIN Includes */
+  27:Core/Src/main.c **** #include <stdio.h>
+  28:Core/Src/main.c **** #include "ring_buffer.h"
+  29:Core/Src/main.c **** #include "bh1750.h"
+  30:Core/Src/main.c **** #include "helpers.h"
+  31:Core/Src/main.c **** /* USER CODE END Includes */
+  32:Core/Src/main.c **** 
+  33:Core/Src/main.c **** /* Private typedef -----------------------------------------------------------*/
+  34:Core/Src/main.c **** /* USER CODE BEGIN PTD */
+  35:Core/Src/main.c **** 
+  36:Core/Src/main.c **** /* USER CODE END PTD */
+  37:Core/Src/main.c **** 
+  38:Core/Src/main.c **** /* Private define ------------------------------------------------------------*/
+  39:Core/Src/main.c **** /* USER CODE BEGIN PD */
+  40:Core/Src/main.c **** /* USER CODE END PD */
+  41:Core/Src/main.c **** 
+  42:Core/Src/main.c **** /* Private macro -------------------------------------------------------------*/
+  43:Core/Src/main.c **** /* USER CODE BEGIN PM */
+  44:Core/Src/main.c **** 
+  45:Core/Src/main.c **** /* USER CODE END PM */
+  46:Core/Src/main.c **** 
+  47:Core/Src/main.c **** /* Private variables ---------------------------------------------------------*/
+  48:Core/Src/main.c **** 
+  49:Core/Src/main.c **** /* USER CODE BEGIN PV */
+  50:Core/Src/main.c **** 
+  51:Core/Src/main.c **** /* USER CODE END PV */
+  52:Core/Src/main.c **** 
+  53:Core/Src/main.c **** /* Private function prototypes -----------------------------------------------*/
+  54:Core/Src/main.c **** void SystemClock_Config(void);
+  55:Core/Src/main.c **** /* USER CODE BEGIN PFP */
+  56:Core/Src/main.c **** 
+  57:Core/Src/main.c **** /* USER CODE END PFP */
+  58:Core/Src/main.c **** 
+  59:Core/Src/main.c **** /* Private user code ---------------------------------------------------------*/
+  60:Core/Src/main.c **** /* USER CODE BEGIN 0 */
+  61:Core/Src/main.c **** static char message[] = "Hello World!\r\n";
+  62:Core/Src/main.c **** // UART transmit buffer descriptor
+  63:Core/Src/main.c **** RingBuffer UART_RingBuffer_Tx;
+  64:Core/Src/main.c **** // UART transmit buffer memory pool
+  65:Core/Src/main.c **** char RingBufferData_Tx[1024];
+  66:Core/Src/main.c **** 
+  67:Core/Src/main.c **** // UART receive buffer descriptor
+  68:Core/Src/main.c **** RingBuffer UART_RingBuffer_Rx;
+  69:Core/Src/main.c **** // UART receive buffer memory pool
+  70:Core/Src/main.c **** char RingBufferData_Rx[1024];
+  71:Core/Src/main.c **** 
+  72:Core/Src/main.c **** char Response_Rx[1024];
+  73:Core/Src/main.c **** uint8_t uart_rx_buffer;
+  74:Core/Src/main.c **** 
+  75:Core/Src/main.c **** uint8_t readyToRead;
+  76:Core/Src/main.c **** uint8_t readyToSend;
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s 			page 4
+
+
+  77:Core/Src/main.c **** 
+  78:Core/Src/main.c **** BH1750_t sensor1;
+  79:Core/Src/main.c **** 
+  80:Core/Src/main.c **** void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
+  81:Core/Src/main.c **** {
+  93              		.loc 1 81 1
+  94              		.cfi_startproc
+  95              		@ args = 0, pretend = 0, frame = 8
+  96              		@ frame_needed = 1, uses_anonymous_args = 0
+  97 0000 80B5     		push	{r7, lr}
+  98              	.LCFI0:
+  99              		.cfi_def_cfa_offset 8
+ 100              		.cfi_offset 7, -8
+ 101              		.cfi_offset 14, -4
+ 102 0002 82B0     		sub	sp, sp, #8
+ 103              	.LCFI1:
+ 104              		.cfi_def_cfa_offset 16
+ 105 0004 00AF     		add	r7, sp, #0
+ 106              	.LCFI2:
+ 107              		.cfi_def_cfa_register 7
+ 108 0006 7860     		str	r0, [r7, #4]
+  82:Core/Src/main.c ****   if (huart == &huart2) {
+  83:Core/Src/main.c ****   }
+  84:Core/Src/main.c **** }
+ 109              		.loc 1 84 1
+ 110 0008 C046     		nop
+ 111 000a BD46     		mov	sp, r7
+ 112 000c 02B0     		add	sp, sp, #8
+ 113              		@ sp needed
+ 114 000e 80BD     		pop	{r7, pc}
+ 115              		.cfi_endproc
+ 116              	.LFE50:
+ 118              		.section	.text.HAL_UART_RxCpltCallback,"ax",%progbits
+ 119              		.align	1
+ 120              		.global	HAL_UART_RxCpltCallback
+ 121              		.syntax unified
+ 122              		.code	16
+ 123              		.thumb_func
+ 125              	HAL_UART_RxCpltCallback:
+ 126              	.LFB51:
+  85:Core/Src/main.c **** 
+  86:Core/Src/main.c **** void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+  87:Core/Src/main.c **** {
+ 127              		.loc 1 87 1
+ 128              		.cfi_startproc
+ 129              		@ args = 0, pretend = 0, frame = 8
+ 130              		@ frame_needed = 1, uses_anonymous_args = 0
+ 131 0000 80B5     		push	{r7, lr}
+ 132              	.LCFI3:
+ 133              		.cfi_def_cfa_offset 8
+ 134              		.cfi_offset 7, -8
+ 135              		.cfi_offset 14, -4
+ 136 0002 82B0     		sub	sp, sp, #8
+ 137              	.LCFI4:
+ 138              		.cfi_def_cfa_offset 16
+ 139 0004 00AF     		add	r7, sp, #0
+ 140              	.LCFI5:
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s 			page 5
+
+
+ 141              		.cfi_def_cfa_register 7
+ 142 0006 7860     		str	r0, [r7, #4]
+  88:Core/Src/main.c ****   if (huart == &huart2) {
+ 143              		.loc 1 88 6
+ 144 0008 7A68     		ldr	r2, [r7, #4]
+ 145 000a 094B     		ldr	r3, .L5
+ 146 000c 9A42     		cmp	r2, r3
+ 147 000e 0AD1     		bne	.L4
+  89:Core/Src/main.c **** 	  char_append(uart_rx_buffer);
+ 148              		.loc 1 89 4
+ 149 0010 084B     		ldr	r3, .L5+4
+ 150 0012 1B78     		ldrb	r3, [r3]
+ 151 0014 1800     		movs	r0, r3
+ 152 0016 FFF7FEFF 		bl	char_append
+  90:Core/Src/main.c ****     HAL_UART_Receive_IT(&huart2, &uart_rx_buffer, 1);
+ 153              		.loc 1 90 5
+ 154 001a 0649     		ldr	r1, .L5+4
+ 155 001c 044B     		ldr	r3, .L5
+ 156 001e 0122     		movs	r2, #1
+ 157 0020 1800     		movs	r0, r3
+ 158 0022 FFF7FEFF 		bl	HAL_UART_Receive_IT
+ 159              	.L4:
+  91:Core/Src/main.c ****   }
+  92:Core/Src/main.c **** }
+ 160              		.loc 1 92 1
+ 161 0026 C046     		nop
+ 162 0028 BD46     		mov	sp, r7
+ 163 002a 02B0     		add	sp, sp, #8
+ 164              		@ sp needed
+ 165 002c 80BD     		pop	{r7, pc}
+ 166              	.L6:
+ 167 002e C046     		.align	2
+ 168              	.L5:
+ 169 0030 00000000 		.word	huart2
+ 170 0034 00000000 		.word	uart_rx_buffer
+ 171              		.cfi_endproc
+ 172              	.LFE51:
+ 174              		.global	__aeabi_f2d
+ 175              		.section	.rodata
+ 176              		.align	2
+ 177              	.LC13:
+ 178 0000 252E3266 		.ascii	"%.2f\015\012\000"
+ 178      0D0A00
+ 179 0007 00       		.align	2
+ 180              	.LC15:
+ 181 0008 4552524F 		.ascii	"ERROR: sensor read\015\012\000"
+ 181      523A2073 
+ 181      656E736F 
+ 181      72207265 
+ 181      61640D0A 
+ 182 001d 000000   		.align	2
+ 183              	.LC17:
+ 184 0020 53656E73 		.ascii	"Sensitivity increased.\015\012\000"
+ 184      69746976 
+ 184      69747920 
+ 184      696E6372 
+ 184      65617365 
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s 			page 6
+
+
+ 185 0039 000000   		.align	2
+ 186              	.LC19:
+ 187 003c 4552524F 		.ascii	"ERROR: unable to incSens\015\012\000"
+ 187      523A2075 
+ 187      6E61626C 
+ 187      6520746F 
+ 187      20696E63 
+ 188 0057 00       		.align	2
+ 189              	.LC21:
+ 190 0058 53656E73 		.ascii	"Sensitivity decreased.\015\012\000"
+ 190      69746976 
+ 190      69747920 
+ 190      64656372 
+ 190      65617365 
+ 191 0071 000000   		.align	2
+ 192              	.LC23:
+ 193 0074 4552524F 		.ascii	"ERROR: unable to decSens\015\012\000"
+ 193      523A2075 
+ 193      6E61626C 
+ 193      6520746F 
+ 193      20646563 
+ 194 008f 00       		.align	2
+ 195              	.LC25:
+ 196 0090 41636365 		.ascii	"Accessible commands:;- readValue - read value rom l"
+ 196      73736962 
+ 196      6C652063 
+ 196      6F6D6D61 
+ 196      6E64733A 
+ 197 00c3 69676874 		.ascii	"ight sensor;- incSens - increase sensitivity;- decS"
+ 197      2073656E 
+ 197      736F723B 
+ 197      2D20696E 
+ 197      6353656E 
+ 198 00f6 656E7320 		.ascii	"ens - decrease sensitivity\015\012\000"
+ 198      2D206465 
+ 198      63726561 
+ 198      73652073 
+ 198      656E7369 
+ 199 0113 00       		.align	2
+ 200              	.LC27:
+ 201 0114 4552524F 		.ascii	"ERROR: command not found\015\012\000"
+ 201      523A2063 
+ 201      6F6D6D61 
+ 201      6E64206E 
+ 201      6F742066 
+ 202 012f 00       		.align	2
+ 203              	.LC0:
+ 204 0130 00000000 		.word	hi2c2
+ 205 0134 11       		.byte	17
+ 206 0135 45       		.byte	69
+ 207 0136 4600     		.short	70
+ 208              		.section	.text.main,"ax",%progbits
+ 209              		.align	1
+ 210              		.global	main
+ 211              		.syntax unified
+ 212              		.code	16
+ 213              		.thumb_func
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s 			page 7
+
+
+ 215              	main:
+ 216              	.LFB52:
+  93:Core/Src/main.c **** /* USER CODE END 0 */
+  94:Core/Src/main.c **** 
+  95:Core/Src/main.c **** /**
+  96:Core/Src/main.c ****   * @brief  The application entry point.
+  97:Core/Src/main.c ****   * @retval int
+  98:Core/Src/main.c ****   */
+  99:Core/Src/main.c **** int main(void)
+ 100:Core/Src/main.c **** {
+ 217              		.loc 1 100 1
+ 218              		.cfi_startproc
+ 219              		@ args = 0, pretend = 0, frame = 160
+ 220              		@ frame_needed = 1, uses_anonymous_args = 0
+ 221 0000 90B5     		push	{r4, r7, lr}
+ 222              	.LCFI6:
+ 223              		.cfi_def_cfa_offset 12
+ 224              		.cfi_offset 4, -12
+ 225              		.cfi_offset 7, -8
+ 226              		.cfi_offset 14, -4
+ 227 0002 A9B0     		sub	sp, sp, #164
+ 228              	.LCFI7:
+ 229              		.cfi_def_cfa_offset 176
+ 230 0004 00AF     		add	r7, sp, #0
+ 231              	.LCFI8:
+ 232              		.cfi_def_cfa_register 7
+ 101:Core/Src/main.c ****   /* USER CODE BEGIN 1 */
+ 102:Core/Src/main.c **** 
+ 103:Core/Src/main.c ****   /* USER CODE END 1 */
+ 104:Core/Src/main.c **** 
+ 105:Core/Src/main.c ****   /* MCU Configuration--------------------------------------------------------*/
+ 106:Core/Src/main.c **** 
+ 107:Core/Src/main.c ****   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+ 108:Core/Src/main.c ****   HAL_Init();
+ 233              		.loc 1 108 3
+ 234 0006 FFF7FEFF 		bl	HAL_Init
+ 109:Core/Src/main.c **** 
+ 110:Core/Src/main.c ****   /* USER CODE BEGIN Init */
+ 111:Core/Src/main.c ****   RingBuffer_Init(&UART_RingBuffer_Tx, &RingBufferData_Tx, 1024);
+ 235              		.loc 1 111 3
+ 236 000a 8023     		movs	r3, #128
+ 237 000c DA00     		lsls	r2, r3, #3
+ 238 000e 8549     		ldr	r1, .L19
+ 239 0010 854B     		ldr	r3, .L19+4
+ 240 0012 1800     		movs	r0, r3
+ 241 0014 FFF7FEFF 		bl	RingBuffer_Init
+ 112:Core/Src/main.c ****   RingBuffer_Init(&UART_RingBuffer_Rx, &RingBufferData_Rx, 1024);
+ 242              		.loc 1 112 3
+ 243 0018 8023     		movs	r3, #128
+ 244 001a DA00     		lsls	r2, r3, #3
+ 245 001c 8349     		ldr	r1, .L19+8
+ 246 001e 844B     		ldr	r3, .L19+12
+ 247 0020 1800     		movs	r0, r3
+ 248 0022 FFF7FEFF 		bl	RingBuffer_Init
+ 113:Core/Src/main.c ****   /* USER CODE END Init */
+ 114:Core/Src/main.c **** 
+ 115:Core/Src/main.c ****   /* Configure the system clock */
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s 			page 8
+
+
+ 116:Core/Src/main.c ****   SystemClock_Config();
+ 249              		.loc 1 116 3
+ 250 0026 FFF7FEFF 		bl	SystemClock_Config
+ 117:Core/Src/main.c **** 
+ 118:Core/Src/main.c ****   /* USER CODE BEGIN SysInit */
+ 119:Core/Src/main.c **** 
+ 120:Core/Src/main.c ****   /* USER CODE END SysInit */
+ 121:Core/Src/main.c **** 
+ 122:Core/Src/main.c ****   /* Initialize all configured peripherals */
+ 123:Core/Src/main.c ****   MX_GPIO_Init();
+ 251              		.loc 1 123 3
+ 252 002a FFF7FEFF 		bl	MX_GPIO_Init
+ 124:Core/Src/main.c ****   MX_USART2_UART_Init();
+ 253              		.loc 1 124 3
+ 254 002e FFF7FEFF 		bl	MX_USART2_UART_Init
+ 125:Core/Src/main.c ****   MX_I2C2_Init();
+ 255              		.loc 1 125 3
+ 256 0032 FFF7FEFF 		bl	MX_I2C2_Init
+ 126:Core/Src/main.c ****   /* USER CODE BEGIN 2 */
+ 127:Core/Src/main.c ****   BH1750_t sensor1 = 
+ 257              		.loc 1 127 12
+ 258 0036 8821     		movs	r1, #136
+ 259 0038 7B18     		adds	r3, r7, r1
+ 260 003a 7E4A     		ldr	r2, .L19+16
+ 261 003c 11CA     		ldmia	r2!, {r0, r4}
+ 262 003e 11C3     		stmia	r3!, {r0, r4}
+ 128:Core/Src/main.c ****   {
+ 129:Core/Src/main.c ****     .BH1750_i2c = &hi2c2,
+ 130:Core/Src/main.c ****     .BH1750_Mode = CONTINUOUS_H_RESOLUTION_MODE_2,
+ 131:Core/Src/main.c ****     .BH1750_MTreg = BH1750_DEFAULT_MTREG,
+ 132:Core/Src/main.c ****     .BH1750_ADDR = (0x23<<1)
+ 133:Core/Src/main.c ****   };
+ 134:Core/Src/main.c **** 
+ 135:Core/Src/main.c ****   BH1750_Init(&sensor1);
+ 263              		.loc 1 135 3
+ 264 0040 7B18     		adds	r3, r7, r1
+ 265 0042 1800     		movs	r0, r3
+ 266 0044 FFF7FEFF 		bl	BH1750_Init
+ 136:Core/Src/main.c **** 
+ 137:Core/Src/main.c ****   /* USER CODE END 2 */
+ 138:Core/Src/main.c **** 
+ 139:Core/Src/main.c ****   /* Infinite loop */
+ 140:Core/Src/main.c ****   /* USER CODE BEGIN WHILE */
+ 141:Core/Src/main.c ****   UART_WriteString(message);
+ 267              		.loc 1 141 3
+ 268 0048 7B4B     		ldr	r3, .L19+20
+ 269 004a 1800     		movs	r0, r3
+ 270 004c FFF7FEFF 		bl	UART_WriteString
+ 142:Core/Src/main.c ****   readyToRead = 0;
+ 271              		.loc 1 142 15
+ 272 0050 7A4B     		ldr	r3, .L19+24
+ 273 0052 0022     		movs	r2, #0
+ 274 0054 1A70     		strb	r2, [r3]
+ 143:Core/Src/main.c ****   readyToSend = 0;
+ 275              		.loc 1 143 15
+ 276 0056 7A4B     		ldr	r3, .L19+28
+ 277 0058 0022     		movs	r2, #0
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s 			page 9
+
+
+ 278 005a 1A70     		strb	r2, [r3]
+ 144:Core/Src/main.c **** 
+ 145:Core/Src/main.c ****   HAL_UART_Receive_IT(&huart2, &uart_rx_buffer, 1);
+ 279              		.loc 1 145 3
+ 280 005c 7949     		ldr	r1, .L19+32
+ 281 005e 7A4B     		ldr	r3, .L19+36
+ 282 0060 0122     		movs	r2, #1
+ 283 0062 1800     		movs	r0, r3
+ 284 0064 FFF7FEFF 		bl	HAL_UART_Receive_IT
+ 285              	.L18:
+ 146:Core/Src/main.c **** 
+ 147:Core/Src/main.c ****   float BH1750_lux;
+ 148:Core/Src/main.c **** 	
+ 149:Core/Src/main.c ****   while (1)
+ 150:Core/Src/main.c ****   {
+ 151:Core/Src/main.c ****     /* USER CODE END WHILE */
+ 152:Core/Src/main.c **** 
+ 153:Core/Src/main.c ****     /* USER CODE BEGIN 3 */
+ 154:Core/Src/main.c ****     if(readyToRead){
+ 286              		.loc 1 154 8
+ 287 0068 744B     		ldr	r3, .L19+24
+ 288 006a 1B78     		ldrb	r3, [r3]
+ 289              		.loc 1 154 7
+ 290 006c 002B     		cmp	r3, #0
+ 291 006e 04D0     		beq	.L8
+ 292              	.LBB4:
+ 155:Core/Src/main.c ****       UART_ReadResponse();
+ 293              		.loc 1 155 7
+ 294 0070 FFF7FEFF 		bl	UART_ReadResponse
+ 156:Core/Src/main.c ****       readyToRead = 0;
+ 295              		.loc 1 156 19
+ 296 0074 714B     		ldr	r3, .L19+24
+ 297 0076 0022     		movs	r2, #0
+ 298 0078 1A70     		strb	r2, [r3]
+ 299              	.L8:
+ 300              	.LBE4:
+ 157:Core/Src/main.c ****     }
+ 158:Core/Src/main.c **** 
+ 159:Core/Src/main.c ****     if (readyToSend)
+ 301              		.loc 1 159 9
+ 302 007a 714B     		ldr	r3, .L19+28
+ 303 007c 1B78     		ldrb	r3, [r3]
+ 304              		.loc 1 159 8
+ 305 007e 002B     		cmp	r3, #0
+ 306 0080 F2D0     		beq	.L18
+ 307              	.LBB5:
+ 160:Core/Src/main.c ****     {
+ 161:Core/Src/main.c ****       char toSend[32];
+ 162:Core/Src/main.c ****       if (readyToSend == 1) // read value from light sensor
+ 308              		.loc 1 162 23
+ 309 0082 6F4B     		ldr	r3, .L19+28
+ 310 0084 1B78     		ldrb	r3, [r3]
+ 311              		.loc 1 162 10
+ 312 0086 012B     		cmp	r3, #1
+ 313 0088 33D1     		bne	.L10
+ 163:Core/Src/main.c ****       {
+ 164:Core/Src/main.c ****         if (BH1750_OK == BH1750_Read(&sensor1, &BH1750_lux))
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s 			page 10
+
+
+ 314              		.loc 1 164 26
+ 315 008a 8424     		movs	r4, #132
+ 316 008c 3A19     		adds	r2, r7, r4
+ 317 008e 8823     		movs	r3, #136
+ 318 0090 FB18     		adds	r3, r7, r3
+ 319 0092 1100     		movs	r1, r2
+ 320 0094 1800     		movs	r0, r3
+ 321 0096 FFF7FEFF 		bl	BH1750_Read
+ 322 009a 0300     		movs	r3, r0
+ 323              		.loc 1 164 12
+ 324 009c 012B     		cmp	r3, #1
+ 325 009e 16D1     		bne	.L11
+ 326              	.LBB6:
+ 165:Core/Src/main.c ****         {
+ 166:Core/Src/main.c ****           uint16_t finalSize = sprintf(toSend, "%.2f\r\n", BH1750_lux);
+ 327              		.loc 1 166 32
+ 328 00a0 3B19     		adds	r3, r7, r4
+ 329 00a2 1B68     		ldr	r3, [r3]
+ 330 00a4 181C     		adds	r0, r3, #0
+ 331 00a6 FFF7FEFF 		bl	__aeabi_f2d
+ 332 00aa 0200     		movs	r2, r0
+ 333 00ac 0B00     		movs	r3, r1
+ 334 00ae 6749     		ldr	r1, .L19+40
+ 335 00b0 3800     		movs	r0, r7
+ 336 00b2 FFF7FEFF 		bl	sprintf
+ 337 00b6 0200     		movs	r2, r0
+ 338              		.loc 1 166 20
+ 339 00b8 9021     		movs	r1, #144
+ 340 00ba 7B18     		adds	r3, r7, r1
+ 341 00bc 1A80     		strh	r2, [r3]
+ 167:Core/Src/main.c ****           HAL_UART_Transmit(&huart2, (uint8_t *)toSend, finalSize, 100);
+ 342              		.loc 1 167 11
+ 343 00be 7B18     		adds	r3, r7, r1
+ 344 00c0 1A88     		ldrh	r2, [r3]
+ 345 00c2 3900     		movs	r1, r7
+ 346 00c4 6048     		ldr	r0, .L19+36
+ 347 00c6 6423     		movs	r3, #100
+ 348 00c8 FFF7FEFF 		bl	HAL_UART_Transmit
+ 349              	.LBE6:
+ 350 00cc A6E0     		b	.L12
+ 351              	.L11:
+ 352              	.LBB7:
+ 168:Core/Src/main.c ****         }
+ 169:Core/Src/main.c ****         else {
+ 170:Core/Src/main.c ****           uint16_t finalSize = sprintf(toSend, "ERROR: sensor read\r\n");
+ 353              		.loc 1 170 32
+ 354 00ce 604A     		ldr	r2, .L19+44
+ 355 00d0 3B00     		movs	r3, r7
+ 356 00d2 1100     		movs	r1, r2
+ 357 00d4 1800     		movs	r0, r3
+ 358 00d6 FFF7FEFF 		bl	sprintf
+ 359 00da 0200     		movs	r2, r0
+ 360              		.loc 1 170 20
+ 361 00dc 9221     		movs	r1, #146
+ 362 00de 7B18     		adds	r3, r7, r1
+ 363 00e0 1A80     		strh	r2, [r3]
+ 171:Core/Src/main.c ****           HAL_UART_Transmit(&huart2, (uint8_t *)toSend, finalSize, 100);
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s 			page 11
+
+
+ 364              		.loc 1 171 11
+ 365 00e2 7B18     		adds	r3, r7, r1
+ 366 00e4 1A88     		ldrh	r2, [r3]
+ 367 00e6 3900     		movs	r1, r7
+ 368 00e8 5748     		ldr	r0, .L19+36
+ 369 00ea 6423     		movs	r3, #100
+ 370 00ec FFF7FEFF 		bl	HAL_UART_Transmit
+ 371 00f0 94E0     		b	.L12
+ 372              	.L10:
+ 373              	.LBE7:
+ 172:Core/Src/main.c ****         }
+ 173:Core/Src/main.c ****       }
+ 174:Core/Src/main.c ****       else if (readyToSend == 2) // increase sensitivity
+ 374              		.loc 1 174 28
+ 375 00f2 534B     		ldr	r3, .L19+28
+ 376 00f4 1B78     		ldrb	r3, [r3]
+ 377              		.loc 1 174 15
+ 378 00f6 022B     		cmp	r3, #2
+ 379 00f8 30D1     		bne	.L13
+ 175:Core/Src/main.c ****       {
+ 176:Core/Src/main.c **** 
+ 177:Core/Src/main.c ****         if (BH1750_OK == BH1750_setMTreg(&sensor1, (sensor1.BH1750_MTreg + 10)))
+ 380              		.loc 1 177 60
+ 381 00fa 8821     		movs	r1, #136
+ 382 00fc 7B18     		adds	r3, r7, r1
+ 383 00fe 5B79     		ldrb	r3, [r3, #5]
+ 384              		.loc 1 177 26
+ 385 0100 0A33     		adds	r3, r3, #10
+ 386 0102 DAB2     		uxtb	r2, r3
+ 387 0104 7B18     		adds	r3, r7, r1
+ 388 0106 1100     		movs	r1, r2
+ 389 0108 1800     		movs	r0, r3
+ 390 010a FFF7FEFF 		bl	BH1750_setMTreg
+ 391 010e 0300     		movs	r3, r0
+ 392              		.loc 1 177 12
+ 393 0110 012B     		cmp	r3, #1
+ 394 0112 11D1     		bne	.L14
+ 395              	.LBB8:
+ 178:Core/Src/main.c ****         {
+ 179:Core/Src/main.c ****           uint16_t finalSize = sprintf(toSend, "Sensitivity increased.\r\n");
+ 396              		.loc 1 179 32
+ 397 0114 4F4A     		ldr	r2, .L19+48
+ 398 0116 3B00     		movs	r3, r7
+ 399 0118 1100     		movs	r1, r2
+ 400 011a 1800     		movs	r0, r3
+ 401 011c FFF7FEFF 		bl	sprintf
+ 402 0120 0200     		movs	r2, r0
+ 403              		.loc 1 179 20
+ 404 0122 9421     		movs	r1, #148
+ 405 0124 7B18     		adds	r3, r7, r1
+ 406 0126 1A80     		strh	r2, [r3]
+ 180:Core/Src/main.c ****           HAL_UART_Transmit(&huart2, (uint8_t *)toSend, finalSize, 100);
+ 407              		.loc 1 180 11
+ 408 0128 7B18     		adds	r3, r7, r1
+ 409 012a 1A88     		ldrh	r2, [r3]
+ 410 012c 3900     		movs	r1, r7
+ 411 012e 4648     		ldr	r0, .L19+36
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s 			page 12
+
+
+ 412 0130 6423     		movs	r3, #100
+ 413 0132 FFF7FEFF 		bl	HAL_UART_Transmit
+ 414              	.LBE8:
+ 415 0136 71E0     		b	.L12
+ 416              	.L14:
+ 417              	.LBB9:
+ 181:Core/Src/main.c ****         }
+ 182:Core/Src/main.c ****         else {
+ 183:Core/Src/main.c ****           uint16_t finalSize = sprintf(toSend, "ERROR: unable to incSens\r\n");
+ 418              		.loc 1 183 32
+ 419 0138 474A     		ldr	r2, .L19+52
+ 420 013a 3B00     		movs	r3, r7
+ 421 013c 1100     		movs	r1, r2
+ 422 013e 1800     		movs	r0, r3
+ 423 0140 FFF7FEFF 		bl	sprintf
+ 424 0144 0200     		movs	r2, r0
+ 425              		.loc 1 183 20
+ 426 0146 9621     		movs	r1, #150
+ 427 0148 7B18     		adds	r3, r7, r1
+ 428 014a 1A80     		strh	r2, [r3]
+ 184:Core/Src/main.c ****           HAL_UART_Transmit(&huart2, (uint8_t *)toSend, finalSize, 100);
+ 429              		.loc 1 184 11
+ 430 014c 7B18     		adds	r3, r7, r1
+ 431 014e 1A88     		ldrh	r2, [r3]
+ 432 0150 3900     		movs	r1, r7
+ 433 0152 3D48     		ldr	r0, .L19+36
+ 434 0154 6423     		movs	r3, #100
+ 435 0156 FFF7FEFF 		bl	HAL_UART_Transmit
+ 436 015a 5FE0     		b	.L12
+ 437              	.L13:
+ 438              	.LBE9:
+ 185:Core/Src/main.c ****         }
+ 186:Core/Src/main.c ****       }
+ 187:Core/Src/main.c ****       else if (readyToSend == 3) // decrease sensitivity
+ 439              		.loc 1 187 28
+ 440 015c 384B     		ldr	r3, .L19+28
+ 441 015e 1B78     		ldrb	r3, [r3]
+ 442              		.loc 1 187 15
+ 443 0160 032B     		cmp	r3, #3
+ 444 0162 30D1     		bne	.L15
+ 188:Core/Src/main.c ****       {
+ 189:Core/Src/main.c ****         if (BH1750_OK == BH1750_setMTreg(&sensor1, (sensor1.BH1750_MTreg - 10)))
+ 445              		.loc 1 189 60
+ 446 0164 8821     		movs	r1, #136
+ 447 0166 7B18     		adds	r3, r7, r1
+ 448 0168 5B79     		ldrb	r3, [r3, #5]
+ 449              		.loc 1 189 26
+ 450 016a 0A3B     		subs	r3, r3, #10
+ 451 016c DAB2     		uxtb	r2, r3
+ 452 016e 7B18     		adds	r3, r7, r1
+ 453 0170 1100     		movs	r1, r2
+ 454 0172 1800     		movs	r0, r3
+ 455 0174 FFF7FEFF 		bl	BH1750_setMTreg
+ 456 0178 0300     		movs	r3, r0
+ 457              		.loc 1 189 12
+ 458 017a 012B     		cmp	r3, #1
+ 459 017c 11D1     		bne	.L16
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s 			page 13
+
+
+ 460              	.LBB10:
+ 190:Core/Src/main.c ****         {
+ 191:Core/Src/main.c ****           uint16_t finalSize = sprintf(toSend, "Sensitivity decreased.\r\n");
+ 461              		.loc 1 191 32
+ 462 017e 374A     		ldr	r2, .L19+56
+ 463 0180 3B00     		movs	r3, r7
+ 464 0182 1100     		movs	r1, r2
+ 465 0184 1800     		movs	r0, r3
+ 466 0186 FFF7FEFF 		bl	sprintf
+ 467 018a 0200     		movs	r2, r0
+ 468              		.loc 1 191 20
+ 469 018c 9821     		movs	r1, #152
+ 470 018e 7B18     		adds	r3, r7, r1
+ 471 0190 1A80     		strh	r2, [r3]
+ 192:Core/Src/main.c ****           HAL_UART_Transmit(&huart2, (uint8_t *)toSend, finalSize, 100);
+ 472              		.loc 1 192 11
+ 473 0192 7B18     		adds	r3, r7, r1
+ 474 0194 1A88     		ldrh	r2, [r3]
+ 475 0196 3900     		movs	r1, r7
+ 476 0198 2B48     		ldr	r0, .L19+36
+ 477 019a 6423     		movs	r3, #100
+ 478 019c FFF7FEFF 		bl	HAL_UART_Transmit
+ 479              	.LBE10:
+ 480 01a0 3CE0     		b	.L12
+ 481              	.L16:
+ 482              	.LBB11:
+ 193:Core/Src/main.c ****         }
+ 194:Core/Src/main.c ****         else {
+ 195:Core/Src/main.c ****           uint16_t finalSize = sprintf(toSend, "ERROR: unable to decSens\r\n");
+ 483              		.loc 1 195 32
+ 484 01a2 2F4A     		ldr	r2, .L19+60
+ 485 01a4 3B00     		movs	r3, r7
+ 486 01a6 1100     		movs	r1, r2
+ 487 01a8 1800     		movs	r0, r3
+ 488 01aa FFF7FEFF 		bl	sprintf
+ 489 01ae 0200     		movs	r2, r0
+ 490              		.loc 1 195 20
+ 491 01b0 9A21     		movs	r1, #154
+ 492 01b2 7B18     		adds	r3, r7, r1
+ 493 01b4 1A80     		strh	r2, [r3]
+ 196:Core/Src/main.c ****           HAL_UART_Transmit(&huart2, (uint8_t *)toSend, finalSize, 100);
+ 494              		.loc 1 196 11
+ 495 01b6 7B18     		adds	r3, r7, r1
+ 496 01b8 1A88     		ldrh	r2, [r3]
+ 497 01ba 3900     		movs	r1, r7
+ 498 01bc 2248     		ldr	r0, .L19+36
+ 499 01be 6423     		movs	r3, #100
+ 500 01c0 FFF7FEFF 		bl	HAL_UART_Transmit
+ 501 01c4 2AE0     		b	.L12
+ 502              	.L15:
+ 503              	.LBE11:
+ 197:Core/Src/main.c ****         }
+ 198:Core/Src/main.c ****       }
+ 199:Core/Src/main.c ****       else if (readyToSend == 4) // help
+ 504              		.loc 1 199 28
+ 505 01c6 1E4B     		ldr	r3, .L19+28
+ 506 01c8 1B78     		ldrb	r3, [r3]
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s 			page 14
+
+
+ 507              		.loc 1 199 15
+ 508 01ca 042B     		cmp	r3, #4
+ 509 01cc 11D1     		bne	.L17
+ 510              	.LBB12:
+ 200:Core/Src/main.c ****       {
+ 201:Core/Src/main.c ****         char toSend[130];
+ 202:Core/Src/main.c ****         uint16_t finalSize = sprintf(toSend, "Accessible commands:;- readValue - read value rom lig
+ 511              		.loc 1 202 30 discriminator 4
+ 512 01ce 254A     		ldr	r2, .L19+64
+ 513 01d0 3B00     		movs	r3, r7
+ 514 01d2 1100     		movs	r1, r2
+ 515 01d4 1800     		movs	r0, r3
+ 516 01d6 FFF7FEFF 		bl	sprintf
+ 517 01da 0200     		movs	r2, r0
+ 518              		.loc 1 202 18 discriminator 4
+ 519 01dc 9C21     		movs	r1, #156
+ 520 01de 7B18     		adds	r3, r7, r1
+ 521 01e0 1A80     		strh	r2, [r3]
+ 203:Core/Src/main.c ****         HAL_UART_Transmit(&huart2, (uint8_t *)toSend, finalSize, 100);
+ 522              		.loc 1 203 9 discriminator 4
+ 523 01e2 7B18     		adds	r3, r7, r1
+ 524 01e4 1A88     		ldrh	r2, [r3]
+ 525 01e6 3900     		movs	r1, r7
+ 526 01e8 1748     		ldr	r0, .L19+36
+ 527 01ea 6423     		movs	r3, #100
+ 528 01ec FFF7FEFF 		bl	HAL_UART_Transmit
+ 529              	.LBE12:
+ 530 01f0 14E0     		b	.L12
+ 531              	.L17:
+ 204:Core/Src/main.c ****       }
+ 205:Core/Src/main.c ****       else if (readyToSend == 5) //unknown command
+ 532              		.loc 1 205 28
+ 533 01f2 134B     		ldr	r3, .L19+28
+ 534 01f4 1B78     		ldrb	r3, [r3]
+ 535              		.loc 1 205 15
+ 536 01f6 052B     		cmp	r3, #5
+ 537 01f8 10D1     		bne	.L12
+ 538              	.LBB13:
+ 206:Core/Src/main.c ****       {
+ 207:Core/Src/main.c ****         uint16_t finalSize = sprintf(toSend, "ERROR: command not found\r\n");
+ 539              		.loc 1 207 30
+ 540 01fa 1B4A     		ldr	r2, .L19+68
+ 541 01fc 3B00     		movs	r3, r7
+ 542 01fe 1100     		movs	r1, r2
+ 543 0200 1800     		movs	r0, r3
+ 544 0202 FFF7FEFF 		bl	sprintf
+ 545 0206 0200     		movs	r2, r0
+ 546              		.loc 1 207 18
+ 547 0208 9E21     		movs	r1, #158
+ 548 020a 7B18     		adds	r3, r7, r1
+ 549 020c 1A80     		strh	r2, [r3]
+ 208:Core/Src/main.c ****         HAL_UART_Transmit(&huart2, (uint8_t *)toSend, finalSize, 100);
+ 550              		.loc 1 208 9
+ 551 020e 7B18     		adds	r3, r7, r1
+ 552 0210 1A88     		ldrh	r2, [r3]
+ 553 0212 3900     		movs	r1, r7
+ 554 0214 0C48     		ldr	r0, .L19+36
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s 			page 15
+
+
+ 555 0216 6423     		movs	r3, #100
+ 556 0218 FFF7FEFF 		bl	HAL_UART_Transmit
+ 557              	.L12:
+ 558              	.LBE13:
+ 209:Core/Src/main.c ****       }
+ 210:Core/Src/main.c **** 
+ 211:Core/Src/main.c ****       readyToSend = 0;
+ 559              		.loc 1 211 19 discriminator 1
+ 560 021c 084B     		ldr	r3, .L19+28
+ 561 021e 0022     		movs	r2, #0
+ 562 0220 1A70     		strb	r2, [r3]
+ 563              	.LBE5:
+ 154:Core/Src/main.c ****       UART_ReadResponse();
+ 564              		.loc 1 154 7 discriminator 1
+ 565 0222 21E7     		b	.L18
+ 566              	.L20:
+ 567              		.align	2
+ 568              	.L19:
+ 569 0224 00000000 		.word	RingBufferData_Tx
+ 570 0228 00000000 		.word	UART_RingBuffer_Tx
+ 571 022c 00000000 		.word	RingBufferData_Rx
+ 572 0230 00000000 		.word	UART_RingBuffer_Rx
+ 573 0234 30010000 		.word	.LC0
+ 574 0238 00000000 		.word	message
+ 575 023c 00000000 		.word	readyToRead
+ 576 0240 00000000 		.word	readyToSend
+ 577 0244 00000000 		.word	uart_rx_buffer
+ 578 0248 00000000 		.word	huart2
+ 579 024c 00000000 		.word	.LC13
+ 580 0250 08000000 		.word	.LC15
+ 581 0254 20000000 		.word	.LC17
+ 582 0258 3C000000 		.word	.LC19
+ 583 025c 58000000 		.word	.LC21
+ 584 0260 74000000 		.word	.LC23
+ 585 0264 90000000 		.word	.LC25
+ 586 0268 14010000 		.word	.LC27
+ 587              		.cfi_endproc
+ 588              	.LFE52:
+ 590              		.section	.text.SystemClock_Config,"ax",%progbits
+ 591              		.align	1
+ 592              		.global	SystemClock_Config
+ 593              		.syntax unified
+ 594              		.code	16
+ 595              		.thumb_func
+ 597              	SystemClock_Config:
+ 598              	.LFB53:
+ 212:Core/Src/main.c ****     }
+ 213:Core/Src/main.c ****   }
+ 214:Core/Src/main.c ****   /* USER CODE END 3 */
+ 215:Core/Src/main.c **** }
+ 216:Core/Src/main.c **** 
+ 217:Core/Src/main.c **** /**
+ 218:Core/Src/main.c ****   * @brief System Clock Configuration
+ 219:Core/Src/main.c ****   * @retval None
+ 220:Core/Src/main.c ****   */
+ 221:Core/Src/main.c **** void SystemClock_Config(void)
+ 222:Core/Src/main.c **** {
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s 			page 16
+
+
+ 599              		.loc 1 222 1
+ 600              		.cfi_startproc
+ 601              		@ args = 0, pretend = 0, frame = 112
+ 602              		@ frame_needed = 1, uses_anonymous_args = 0
+ 603 0000 90B5     		push	{r4, r7, lr}
+ 604              	.LCFI9:
+ 605              		.cfi_def_cfa_offset 12
+ 606              		.cfi_offset 4, -12
+ 607              		.cfi_offset 7, -8
+ 608              		.cfi_offset 14, -4
+ 609 0002 9DB0     		sub	sp, sp, #116
+ 610              	.LCFI10:
+ 611              		.cfi_def_cfa_offset 128
+ 612 0004 00AF     		add	r7, sp, #0
+ 613              	.LCFI11:
+ 614              		.cfi_def_cfa_register 7
+ 223:Core/Src/main.c ****   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+ 615              		.loc 1 223 22
+ 616 0006 3824     		movs	r4, #56
+ 617 0008 3B19     		adds	r3, r7, r4
+ 618 000a 1800     		movs	r0, r3
+ 619 000c 3823     		movs	r3, #56
+ 620 000e 1A00     		movs	r2, r3
+ 621 0010 0021     		movs	r1, #0
+ 622 0012 FFF7FEFF 		bl	memset
+ 224:Core/Src/main.c ****   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+ 623              		.loc 1 224 22
+ 624 0016 2423     		movs	r3, #36
+ 625 0018 FB18     		adds	r3, r7, r3
+ 626 001a 1800     		movs	r0, r3
+ 627 001c 1423     		movs	r3, #20
+ 628 001e 1A00     		movs	r2, r3
+ 629 0020 0021     		movs	r1, #0
+ 630 0022 FFF7FEFF 		bl	memset
+ 225:Core/Src/main.c ****   RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
+ 631              		.loc 1 225 28
+ 632 0026 3B00     		movs	r3, r7
+ 633 0028 1800     		movs	r0, r3
+ 634 002a 2423     		movs	r3, #36
+ 635 002c 1A00     		movs	r2, r3
+ 636 002e 0021     		movs	r1, #0
+ 637 0030 FFF7FEFF 		bl	memset
+ 226:Core/Src/main.c **** 
+ 227:Core/Src/main.c ****   /** Configure the main internal regulator output voltage
+ 228:Core/Src/main.c ****   */
+ 229:Core/Src/main.c ****   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+ 638              		.loc 1 229 3
+ 639 0034 294B     		ldr	r3, .L26
+ 640 0036 1B68     		ldr	r3, [r3]
+ 641 0038 294A     		ldr	r2, .L26+4
+ 642 003a 1A40     		ands	r2, r3
+ 643 003c 274B     		ldr	r3, .L26
+ 644 003e 8021     		movs	r1, #128
+ 645 0040 0901     		lsls	r1, r1, #4
+ 646 0042 0A43     		orrs	r2, r1
+ 647 0044 1A60     		str	r2, [r3]
+ 230:Core/Src/main.c **** 
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s 			page 17
+
+
+ 231:Core/Src/main.c ****   /** Initializes the RCC Oscillators according to the specified parameters
+ 232:Core/Src/main.c ****   * in the RCC_OscInitTypeDef structure.
+ 233:Core/Src/main.c ****   */
+ 234:Core/Src/main.c ****   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+ 648              		.loc 1 234 36
+ 649 0046 2100     		movs	r1, r4
+ 650 0048 7B18     		adds	r3, r7, r1
+ 651 004a 0222     		movs	r2, #2
+ 652 004c 1A60     		str	r2, [r3]
+ 235:Core/Src/main.c ****   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+ 653              		.loc 1 235 30
+ 654 004e 7B18     		adds	r3, r7, r1
+ 655 0050 0122     		movs	r2, #1
+ 656 0052 DA60     		str	r2, [r3, #12]
+ 236:Core/Src/main.c ****   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+ 657              		.loc 1 236 41
+ 658 0054 7B18     		adds	r3, r7, r1
+ 659 0056 1022     		movs	r2, #16
+ 660 0058 1A61     		str	r2, [r3, #16]
+ 237:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+ 661              		.loc 1 237 34
+ 662 005a 7B18     		adds	r3, r7, r1
+ 663 005c 0222     		movs	r2, #2
+ 664 005e 9A62     		str	r2, [r3, #40]
+ 238:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
+ 665              		.loc 1 238 35
+ 666 0060 7B18     		adds	r3, r7, r1
+ 667 0062 0022     		movs	r2, #0
+ 668 0064 DA62     		str	r2, [r3, #44]
+ 239:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLMUL = RCC_PLLMUL_3;
+ 669              		.loc 1 239 32
+ 670 0066 7B18     		adds	r3, r7, r1
+ 671 0068 0022     		movs	r2, #0
+ 672 006a 1A63     		str	r2, [r3, #48]
+ 240:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLDIV = RCC_PLLDIV_3;
+ 673              		.loc 1 240 32
+ 674 006c 7B18     		adds	r3, r7, r1
+ 675 006e 8022     		movs	r2, #128
+ 676 0070 1204     		lsls	r2, r2, #16
+ 677 0072 5A63     		str	r2, [r3, #52]
+ 241:Core/Src/main.c ****   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+ 678              		.loc 1 241 7
+ 679 0074 7B18     		adds	r3, r7, r1
+ 680 0076 1800     		movs	r0, r3
+ 681 0078 FFF7FEFF 		bl	HAL_RCC_OscConfig
+ 682 007c 031E     		subs	r3, r0, #0
+ 683              		.loc 1 241 6
+ 684 007e 01D0     		beq	.L22
+ 242:Core/Src/main.c ****   {
+ 243:Core/Src/main.c ****     Error_Handler();
+ 685              		.loc 1 243 5
+ 686 0080 FFF7FEFF 		bl	Error_Handler
+ 687              	.L22:
+ 244:Core/Src/main.c ****   }
+ 245:Core/Src/main.c **** 
+ 246:Core/Src/main.c ****   /** Initializes the CPU, AHB and APB buses clocks
+ 247:Core/Src/main.c ****   */
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s 			page 18
+
+
+ 248:Core/Src/main.c ****   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+ 688              		.loc 1 248 31
+ 689 0084 2421     		movs	r1, #36
+ 690 0086 7B18     		adds	r3, r7, r1
+ 691 0088 0F22     		movs	r2, #15
+ 692 008a 1A60     		str	r2, [r3]
+ 249:Core/Src/main.c ****                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+ 250:Core/Src/main.c ****   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+ 693              		.loc 1 250 34
+ 694 008c 7B18     		adds	r3, r7, r1
+ 695 008e 0322     		movs	r2, #3
+ 696 0090 5A60     		str	r2, [r3, #4]
+ 251:Core/Src/main.c ****   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+ 697              		.loc 1 251 35
+ 698 0092 7B18     		adds	r3, r7, r1
+ 699 0094 0022     		movs	r2, #0
+ 700 0096 9A60     		str	r2, [r3, #8]
+ 252:Core/Src/main.c ****   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+ 701              		.loc 1 252 36
+ 702 0098 7B18     		adds	r3, r7, r1
+ 703 009a 0022     		movs	r2, #0
+ 704 009c DA60     		str	r2, [r3, #12]
+ 253:Core/Src/main.c ****   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+ 705              		.loc 1 253 36
+ 706 009e 7B18     		adds	r3, r7, r1
+ 707 00a0 0022     		movs	r2, #0
+ 708 00a2 1A61     		str	r2, [r3, #16]
+ 254:Core/Src/main.c **** 
+ 255:Core/Src/main.c ****   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
+ 709              		.loc 1 255 7
+ 710 00a4 7B18     		adds	r3, r7, r1
+ 711 00a6 0021     		movs	r1, #0
+ 712 00a8 1800     		movs	r0, r3
+ 713 00aa FFF7FEFF 		bl	HAL_RCC_ClockConfig
+ 714 00ae 031E     		subs	r3, r0, #0
+ 715              		.loc 1 255 6
+ 716 00b0 01D0     		beq	.L23
+ 256:Core/Src/main.c ****   {
+ 257:Core/Src/main.c ****     Error_Handler();
+ 717              		.loc 1 257 5
+ 718 00b2 FFF7FEFF 		bl	Error_Handler
+ 719              	.L23:
+ 258:Core/Src/main.c ****   }
+ 259:Core/Src/main.c ****   PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART2;
+ 720              		.loc 1 259 38
+ 721 00b6 3B00     		movs	r3, r7
+ 722 00b8 0222     		movs	r2, #2
+ 723 00ba 1A60     		str	r2, [r3]
+ 260:Core/Src/main.c ****   PeriphClkInit.Usart2ClockSelection = RCC_USART2CLKSOURCE_PCLK1;
+ 724              		.loc 1 260 38
+ 725 00bc 3B00     		movs	r3, r7
+ 726 00be 0022     		movs	r2, #0
+ 727 00c0 1A61     		str	r2, [r3, #16]
+ 261:Core/Src/main.c ****   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
+ 728              		.loc 1 261 7
+ 729 00c2 3B00     		movs	r3, r7
+ 730 00c4 1800     		movs	r0, r3
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s 			page 19
+
+
+ 731 00c6 FFF7FEFF 		bl	HAL_RCCEx_PeriphCLKConfig
+ 732 00ca 031E     		subs	r3, r0, #0
+ 733              		.loc 1 261 6
+ 734 00cc 01D0     		beq	.L25
+ 262:Core/Src/main.c ****   {
+ 263:Core/Src/main.c ****     Error_Handler();
+ 735              		.loc 1 263 5
+ 736 00ce FFF7FEFF 		bl	Error_Handler
+ 737              	.L25:
+ 264:Core/Src/main.c ****   }
+ 265:Core/Src/main.c **** }
+ 738              		.loc 1 265 1
+ 739 00d2 C046     		nop
+ 740 00d4 BD46     		mov	sp, r7
+ 741 00d6 1DB0     		add	sp, sp, #116
+ 742              		@ sp needed
+ 743 00d8 90BD     		pop	{r4, r7, pc}
+ 744              	.L27:
+ 745 00da C046     		.align	2
+ 746              	.L26:
+ 747 00dc 00700040 		.word	1073770496
+ 748 00e0 FFE7FFFF 		.word	-6145
+ 749              		.cfi_endproc
+ 750              	.LFE53:
+ 752              		.section	.text.HAL_TIM_PeriodElapsedCallback,"ax",%progbits
+ 753              		.align	1
+ 754              		.global	HAL_TIM_PeriodElapsedCallback
+ 755              		.syntax unified
+ 756              		.code	16
+ 757              		.thumb_func
+ 759              	HAL_TIM_PeriodElapsedCallback:
+ 760              	.LFB54:
+ 266:Core/Src/main.c **** 
+ 267:Core/Src/main.c **** /* USER CODE BEGIN 4 */
+ 268:Core/Src/main.c **** 
+ 269:Core/Src/main.c **** /* USER CODE END 4 */
+ 270:Core/Src/main.c **** 
+ 271:Core/Src/main.c **** /**
+ 272:Core/Src/main.c ****   * @brief  Period elapsed callback in non blocking mode
+ 273:Core/Src/main.c ****   * @note   This function is called  when TIM2 interrupt took place, inside
+ 274:Core/Src/main.c ****   * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
+ 275:Core/Src/main.c ****   * a global variable "uwTick" used as application time base.
+ 276:Core/Src/main.c ****   * @param  htim : TIM handle
+ 277:Core/Src/main.c ****   * @retval None
+ 278:Core/Src/main.c ****   */
+ 279:Core/Src/main.c **** void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+ 280:Core/Src/main.c **** {
+ 761              		.loc 1 280 1
+ 762              		.cfi_startproc
+ 763              		@ args = 0, pretend = 0, frame = 8
+ 764              		@ frame_needed = 1, uses_anonymous_args = 0
+ 765 0000 80B5     		push	{r7, lr}
+ 766              	.LCFI12:
+ 767              		.cfi_def_cfa_offset 8
+ 768              		.cfi_offset 7, -8
+ 769              		.cfi_offset 14, -4
+ 770 0002 82B0     		sub	sp, sp, #8
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s 			page 20
+
+
+ 771              	.LCFI13:
+ 772              		.cfi_def_cfa_offset 16
+ 773 0004 00AF     		add	r7, sp, #0
+ 774              	.LCFI14:
+ 775              		.cfi_def_cfa_register 7
+ 776 0006 7860     		str	r0, [r7, #4]
+ 281:Core/Src/main.c ****   /* USER CODE BEGIN Callback 0 */
+ 282:Core/Src/main.c **** 
+ 283:Core/Src/main.c ****   /* USER CODE END Callback 0 */
+ 284:Core/Src/main.c ****   if (htim->Instance == TIM2) {
+ 777              		.loc 1 284 11
+ 778 0008 7B68     		ldr	r3, [r7, #4]
+ 779 000a 1A68     		ldr	r2, [r3]
+ 780              		.loc 1 284 6
+ 781 000c 8023     		movs	r3, #128
+ 782 000e DB05     		lsls	r3, r3, #23
+ 783 0010 9A42     		cmp	r2, r3
+ 784 0012 01D1     		bne	.L30
+ 285:Core/Src/main.c ****     HAL_IncTick();
+ 785              		.loc 1 285 5
+ 786 0014 FFF7FEFF 		bl	HAL_IncTick
+ 787              	.L30:
+ 286:Core/Src/main.c ****   }
+ 287:Core/Src/main.c ****   /* USER CODE BEGIN Callback 1 */
+ 288:Core/Src/main.c **** 
+ 289:Core/Src/main.c ****   /* USER CODE END Callback 1 */
+ 290:Core/Src/main.c **** }
+ 788              		.loc 1 290 1
+ 789 0018 C046     		nop
+ 790 001a BD46     		mov	sp, r7
+ 791 001c 02B0     		add	sp, sp, #8
+ 792              		@ sp needed
+ 793 001e 80BD     		pop	{r7, pc}
+ 794              		.cfi_endproc
+ 795              	.LFE54:
+ 797              		.section	.text.Error_Handler,"ax",%progbits
+ 798              		.align	1
+ 799              		.global	Error_Handler
+ 800              		.syntax unified
+ 801              		.code	16
+ 802              		.thumb_func
+ 804              	Error_Handler:
+ 805              	.LFB55:
+ 291:Core/Src/main.c **** 
+ 292:Core/Src/main.c **** /**
+ 293:Core/Src/main.c ****   * @brief  This function is executed in case of error occurrence.
+ 294:Core/Src/main.c ****   * @retval None
+ 295:Core/Src/main.c ****   */
+ 296:Core/Src/main.c **** void Error_Handler(void)
+ 297:Core/Src/main.c **** {
+ 806              		.loc 1 297 1
+ 807              		.cfi_startproc
+ 808              		@ args = 0, pretend = 0, frame = 0
+ 809              		@ frame_needed = 1, uses_anonymous_args = 0
+ 810 0000 80B5     		push	{r7, lr}
+ 811              	.LCFI15:
+ 812              		.cfi_def_cfa_offset 8
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s 			page 21
+
+
+ 813              		.cfi_offset 7, -8
+ 814              		.cfi_offset 14, -4
+ 815 0002 00AF     		add	r7, sp, #0
+ 816              	.LCFI16:
+ 817              		.cfi_def_cfa_register 7
+ 818              	.LBB14:
+ 819              	.LBB15:
+ 820              		.file 2 "Drivers/CMSIS/Include/cmsis_gcc.h"
+   1:Drivers/CMSIS/Include/cmsis_gcc.h **** /**************************************************************************//**
+   2:Drivers/CMSIS/Include/cmsis_gcc.h ****  * @file     cmsis_gcc.h
+   3:Drivers/CMSIS/Include/cmsis_gcc.h ****  * @brief    CMSIS compiler GCC header file
+   4:Drivers/CMSIS/Include/cmsis_gcc.h ****  * @version  V5.0.4
+   5:Drivers/CMSIS/Include/cmsis_gcc.h ****  * @date     09. April 2018
+   6:Drivers/CMSIS/Include/cmsis_gcc.h ****  ******************************************************************************/
+   7:Drivers/CMSIS/Include/cmsis_gcc.h **** /*
+   8:Drivers/CMSIS/Include/cmsis_gcc.h ****  * Copyright (c) 2009-2018 Arm Limited. All rights reserved.
+   9:Drivers/CMSIS/Include/cmsis_gcc.h ****  *
+  10:Drivers/CMSIS/Include/cmsis_gcc.h ****  * SPDX-License-Identifier: Apache-2.0
+  11:Drivers/CMSIS/Include/cmsis_gcc.h ****  *
+  12:Drivers/CMSIS/Include/cmsis_gcc.h ****  * Licensed under the Apache License, Version 2.0 (the License); you may
+  13:Drivers/CMSIS/Include/cmsis_gcc.h ****  * not use this file except in compliance with the License.
+  14:Drivers/CMSIS/Include/cmsis_gcc.h ****  * You may obtain a copy of the License at
+  15:Drivers/CMSIS/Include/cmsis_gcc.h ****  *
+  16:Drivers/CMSIS/Include/cmsis_gcc.h ****  * www.apache.org/licenses/LICENSE-2.0
+  17:Drivers/CMSIS/Include/cmsis_gcc.h ****  *
+  18:Drivers/CMSIS/Include/cmsis_gcc.h ****  * Unless required by applicable law or agreed to in writing, software
+  19:Drivers/CMSIS/Include/cmsis_gcc.h ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  20:Drivers/CMSIS/Include/cmsis_gcc.h ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  21:Drivers/CMSIS/Include/cmsis_gcc.h ****  * See the License for the specific language governing permissions and
+  22:Drivers/CMSIS/Include/cmsis_gcc.h ****  * limitations under the License.
+  23:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+  24:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+  25:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef __CMSIS_GCC_H
+  26:Drivers/CMSIS/Include/cmsis_gcc.h **** #define __CMSIS_GCC_H
+  27:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+  28:Drivers/CMSIS/Include/cmsis_gcc.h **** /* ignore some GCC warnings */
+  29:Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic push
+  30:Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wsign-conversion"
+  31:Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wconversion"
+  32:Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wunused-parameter"
+  33:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+  34:Drivers/CMSIS/Include/cmsis_gcc.h **** /* Fallback for __has_builtin */
+  35:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef __has_builtin
+  36:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __has_builtin(x) (0)
+  37:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  38:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+  39:Drivers/CMSIS/Include/cmsis_gcc.h **** /* CMSIS compiler specific defines */
+  40:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __ASM
+  41:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __ASM                                  __asm
+  42:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  43:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __INLINE
+  44:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __INLINE                               inline
+  45:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  46:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __STATIC_INLINE
+  47:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __STATIC_INLINE                        static inline
+  48:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  49:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __STATIC_FORCEINLINE                 
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s 			page 22
+
+
+  50:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __STATIC_FORCEINLINE                   __attribute__((always_inline)) static inline
+  51:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif                                           
+  52:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __NO_RETURN
+  53:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __NO_RETURN                            __attribute__((__noreturn__))
+  54:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  55:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __USED
+  56:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __USED                                 __attribute__((used))
+  57:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  58:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __WEAK
+  59:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __WEAK                                 __attribute__((weak))
+  60:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  61:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __PACKED
+  62:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __PACKED                               __attribute__((packed, aligned(1)))
+  63:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  64:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __PACKED_STRUCT
+  65:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __PACKED_STRUCT                        struct __attribute__((packed, aligned(1)))
+  66:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  67:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __PACKED_UNION
+  68:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __PACKED_UNION                         union __attribute__((packed, aligned(1)))
+  69:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  70:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32        /* deprecated */
+  71:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+  72:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  73:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  74:Drivers/CMSIS/Include/cmsis_gcc.h ****   struct __attribute__((packed)) T_UINT32 { uint32_t v; };
+  75:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+  76:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT32(x)                  (((struct T_UINT32 *)(x))->v)
+  77:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  78:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT16_WRITE
+  79:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+  80:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  81:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  82:Drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT16_WRITE { uint16_t v; };
+  83:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+  84:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT16_WRITE(addr, val)    (void)((((struct T_UINT16_WRITE *)(void *)(addr))-
+  85:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  86:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT16_READ
+  87:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+  88:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  89:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  90:Drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT16_READ { uint16_t v; };
+  91:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+  92:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT16_READ(addr)          (((const struct T_UINT16_READ *)(const void *)(add
+  93:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  94:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32_WRITE
+  95:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+  96:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  97:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  98:Drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT32_WRITE { uint32_t v; };
+  99:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+ 100:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT32_WRITE(addr, val)    (void)((((struct T_UINT32_WRITE *)(void *)(addr))-
+ 101:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 102:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32_READ
+ 103:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+ 104:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+ 105:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+ 106:Drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT32_READ { uint32_t v; };
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s 			page 23
+
+
+ 107:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+ 108:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT32_READ(addr)          (((const struct T_UINT32_READ *)(const void *)(add
+ 109:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 110:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __ALIGNED
+ 111:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __ALIGNED(x)                           __attribute__((aligned(x)))
+ 112:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 113:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __RESTRICT
+ 114:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __RESTRICT                             __restrict
+ 115:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 116:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 117:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 118:Drivers/CMSIS/Include/cmsis_gcc.h **** /* ###########################  Core Function Access  ########################### */
+ 119:Drivers/CMSIS/Include/cmsis_gcc.h **** /** \ingroup  CMSIS_Core_FunctionInterface
+ 120:Drivers/CMSIS/Include/cmsis_gcc.h ****     \defgroup CMSIS_Core_RegAccFunctions CMSIS Core Register Access Functions
+ 121:Drivers/CMSIS/Include/cmsis_gcc.h ****   @{
+ 122:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 123:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 124:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 125:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Enable IRQ Interrupts
+ 126:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Enables IRQ interrupts by clearing the I-bit in the CPSR.
+ 127:Drivers/CMSIS/Include/cmsis_gcc.h ****            Can only be executed in Privileged modes.
+ 128:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 129:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE void __enable_irq(void)
+ 130:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 131:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("cpsie i" : : : "memory");
+ 132:Drivers/CMSIS/Include/cmsis_gcc.h **** }
+ 133:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 134:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 135:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 136:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Disable IRQ Interrupts
+ 137:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Disables IRQ interrupts by setting the I-bit in the CPSR.
+ 138:Drivers/CMSIS/Include/cmsis_gcc.h ****            Can only be executed in Privileged modes.
+ 139:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 140:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE void __disable_irq(void)
+ 141:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 142:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("cpsid i" : : : "memory");
+ 821              		.loc 2 142 3
+ 822              		.syntax divided
+ 823              	@ 142 "Drivers/CMSIS/Include/cmsis_gcc.h" 1
+ 824 0004 72B6     		cpsid i
+ 825              	@ 0 "" 2
+ 143:Drivers/CMSIS/Include/cmsis_gcc.h **** }
+ 826              		.loc 2 143 1
+ 827              		.thumb
+ 828              		.syntax unified
+ 829 0006 C046     		nop
+ 830              	.L32:
+ 831              	.LBE15:
+ 832              	.LBE14:
+ 298:Core/Src/main.c ****   /* USER CODE BEGIN Error_Handler_Debug */
+ 299:Core/Src/main.c ****   /* User can add his own implementation to report the HAL error return state */
+ 300:Core/Src/main.c ****   __disable_irq();
+ 301:Core/Src/main.c ****   while (1)
+ 833              		.loc 1 301 9 discriminator 1
+ 834 0008 FEE7     		b	.L32
+ 835              		.cfi_endproc
+ 836              	.LFE55:
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s 			page 24
+
+
+ 838              		.text
+ 839              	.Letext0:
+ 840              		.file 3 "d:\\program files (x86)\\gnu arm embedded toolchain\\10 2021.10\\arm-none-eabi\\include\\
+ 841              		.file 4 "d:\\program files (x86)\\gnu arm embedded toolchain\\10 2021.10\\arm-none-eabi\\include\\
+ 842              		.file 5 "Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l053xx.h"
+ 843              		.file 6 "d:\\program files (x86)\\gnu arm embedded toolchain\\10 2021.10\\lib\\gcc\\arm-none-eabi\
+ 844              		.file 7 "Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_def.h"
+ 845              		.file 8 "Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_rcc.h"
+ 846              		.file 9 "Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_rcc_ex.h"
+ 847              		.file 10 "Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_dma.h"
+ 848              		.file 11 "Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_i2c.h"
+ 849              		.file 12 "Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_tim.h"
+ 850              		.file 13 "Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_uart.h"
+ 851              		.file 14 "Core/Inc/i2c.h"
+ 852              		.file 15 "Core/Inc/usart.h"
+ 853              		.file 16 "Core/Inc/ring_buffer.h"
+ 854              		.file 17 "Core/Inc/bh1750.h"
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s 			page 25
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 main.c
+C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s:18     .data.message:00000000 $d
+C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s:21     .data.message:00000000 message
+C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s:28     .bss.UART_RingBuffer_Tx:00000000 UART_RingBuffer_Tx
+C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s:25     .bss.UART_RingBuffer_Tx:00000000 $d
+C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s:35     .bss.RingBufferData_Tx:00000000 RingBufferData_Tx
+C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s:32     .bss.RingBufferData_Tx:00000000 $d
+C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s:42     .bss.UART_RingBuffer_Rx:00000000 UART_RingBuffer_Rx
+C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s:39     .bss.UART_RingBuffer_Rx:00000000 $d
+C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s:49     .bss.RingBufferData_Rx:00000000 RingBufferData_Rx
+C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s:46     .bss.RingBufferData_Rx:00000000 $d
+C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s:56     .bss.Response_Rx:00000000 Response_Rx
+C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s:53     .bss.Response_Rx:00000000 $d
+C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s:62     .bss.uart_rx_buffer:00000000 uart_rx_buffer
+C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s:63     .bss.uart_rx_buffer:00000000 $d
+C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s:68     .bss.readyToRead:00000000 readyToRead
+C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s:69     .bss.readyToRead:00000000 $d
+C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s:74     .bss.readyToSend:00000000 readyToSend
+C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s:75     .bss.readyToSend:00000000 $d
+C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s:81     .bss.sensor1:00000000 sensor1
+C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s:78     .bss.sensor1:00000000 $d
+C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s:84     .text.HAL_UART_TxCpltCallback:00000000 $t
+C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s:90     .text.HAL_UART_TxCpltCallback:00000000 HAL_UART_TxCpltCallback
+C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s:119    .text.HAL_UART_RxCpltCallback:00000000 $t
+C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s:125    .text.HAL_UART_RxCpltCallback:00000000 HAL_UART_RxCpltCallback
+C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s:169    .text.HAL_UART_RxCpltCallback:00000030 $d
+C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s:176    .rodata:00000000 $d
+C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s:209    .text.main:00000000 $t
+C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s:215    .text.main:00000000 main
+C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s:597    .text.SystemClock_Config:00000000 SystemClock_Config
+C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s:569    .text.main:00000224 $d
+C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s:591    .text.SystemClock_Config:00000000 $t
+C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s:804    .text.Error_Handler:00000000 Error_Handler
+C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s:747    .text.SystemClock_Config:000000dc $d
+C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s:753    .text.HAL_TIM_PeriodElapsedCallback:00000000 $t
+C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s:759    .text.HAL_TIM_PeriodElapsedCallback:00000000 HAL_TIM_PeriodElapsedCallback
+C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s:798    .text.Error_Handler:00000000 $t
+
+UNDEFINED SYMBOLS
+char_append
+HAL_UART_Receive_IT
+huart2
+__aeabi_f2d
+hi2c2
+HAL_Init
+RingBuffer_Init
+MX_GPIO_Init
+MX_USART2_UART_Init
+MX_I2C2_Init
+BH1750_Init
+UART_WriteString
+UART_ReadResponse
+BH1750_Read
+sprintf
+HAL_UART_Transmit
+BH1750_setMTreg
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccc22UdW.s 			page 26
+
+
+memset
+HAL_RCC_OscConfig
+HAL_RCC_ClockConfig
+HAL_RCCEx_PeriphCLKConfig
+HAL_IncTick

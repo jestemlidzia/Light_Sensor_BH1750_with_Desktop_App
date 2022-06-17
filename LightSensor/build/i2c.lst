@@ -1,0 +1,486 @@
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\cc3bHGsA.s 			page 1
+
+
+   1              		.cpu cortex-m0plus
+   2              		.arch armv6s-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 0
+  12              		.eabi_attribute 18, 4
+  13              		.file	"i2c.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.global	hi2c2
+  18              		.section	.bss.hi2c2,"aw",%nobits
+  19              		.align	2
+  22              	hi2c2:
+  23 0000 00000000 		.space	76
+  23      00000000 
+  23      00000000 
+  23      00000000 
+  23      00000000 
+  24              		.section	.text.MX_I2C2_Init,"ax",%progbits
+  25              		.align	1
+  26              		.global	MX_I2C2_Init
+  27              		.syntax unified
+  28              		.code	16
+  29              		.thumb_func
+  31              	MX_I2C2_Init:
+  32              	.LFB47:
+  33              		.file 1 "Core/Src/i2c.c"
+   1:Core/Src/i2c.c **** /* USER CODE BEGIN Header */
+   2:Core/Src/i2c.c **** /**
+   3:Core/Src/i2c.c ****   ******************************************************************************
+   4:Core/Src/i2c.c ****   * @file    i2c.c
+   5:Core/Src/i2c.c ****   * @brief   This file provides code for the configuration
+   6:Core/Src/i2c.c ****   *          of the I2C instances.
+   7:Core/Src/i2c.c ****   ******************************************************************************
+   8:Core/Src/i2c.c ****   * @attention
+   9:Core/Src/i2c.c ****   *
+  10:Core/Src/i2c.c ****   * Copyright (c) 2022 STMicroelectronics.
+  11:Core/Src/i2c.c ****   * All rights reserved.
+  12:Core/Src/i2c.c ****   *
+  13:Core/Src/i2c.c ****   * This software is licensed under terms that can be found in the LICENSE file
+  14:Core/Src/i2c.c ****   * in the root directory of this software component.
+  15:Core/Src/i2c.c ****   * If no LICENSE file comes with this software, it is provided AS-IS.
+  16:Core/Src/i2c.c ****   *
+  17:Core/Src/i2c.c ****   ******************************************************************************
+  18:Core/Src/i2c.c ****   */
+  19:Core/Src/i2c.c **** /* USER CODE END Header */
+  20:Core/Src/i2c.c **** /* Includes ------------------------------------------------------------------*/
+  21:Core/Src/i2c.c **** #include "i2c.h"
+  22:Core/Src/i2c.c **** 
+  23:Core/Src/i2c.c **** /* USER CODE BEGIN 0 */
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\cc3bHGsA.s 			page 2
+
+
+  24:Core/Src/i2c.c **** 
+  25:Core/Src/i2c.c **** /* USER CODE END 0 */
+  26:Core/Src/i2c.c **** 
+  27:Core/Src/i2c.c **** I2C_HandleTypeDef hi2c2;
+  28:Core/Src/i2c.c **** 
+  29:Core/Src/i2c.c **** /* I2C2 init function */
+  30:Core/Src/i2c.c **** void MX_I2C2_Init(void)
+  31:Core/Src/i2c.c **** {
+  34              		.loc 1 31 1
+  35              		.cfi_startproc
+  36              		@ args = 0, pretend = 0, frame = 0
+  37              		@ frame_needed = 1, uses_anonymous_args = 0
+  38 0000 80B5     		push	{r7, lr}
+  39              	.LCFI0:
+  40              		.cfi_def_cfa_offset 8
+  41              		.cfi_offset 7, -8
+  42              		.cfi_offset 14, -4
+  43 0002 00AF     		add	r7, sp, #0
+  44              	.LCFI1:
+  45              		.cfi_def_cfa_register 7
+  32:Core/Src/i2c.c **** 
+  33:Core/Src/i2c.c ****   /* USER CODE BEGIN I2C2_Init 0 */
+  34:Core/Src/i2c.c **** 
+  35:Core/Src/i2c.c ****   /* USER CODE END I2C2_Init 0 */
+  36:Core/Src/i2c.c **** 
+  37:Core/Src/i2c.c ****   /* USER CODE BEGIN I2C2_Init 1 */
+  38:Core/Src/i2c.c **** 
+  39:Core/Src/i2c.c ****   /* USER CODE END I2C2_Init 1 */
+  40:Core/Src/i2c.c ****   hi2c2.Instance = I2C2;
+  46              		.loc 1 40 18
+  47 0004 1B4B     		ldr	r3, .L6
+  48 0006 1C4A     		ldr	r2, .L6+4
+  49 0008 1A60     		str	r2, [r3]
+  41:Core/Src/i2c.c ****   hi2c2.Init.Timing = 0x00303D5B;
+  50              		.loc 1 41 21
+  51 000a 1A4B     		ldr	r3, .L6
+  52 000c 1B4A     		ldr	r2, .L6+8
+  53 000e 5A60     		str	r2, [r3, #4]
+  42:Core/Src/i2c.c ****   hi2c2.Init.OwnAddress1 = 0;
+  54              		.loc 1 42 26
+  55 0010 184B     		ldr	r3, .L6
+  56 0012 0022     		movs	r2, #0
+  57 0014 9A60     		str	r2, [r3, #8]
+  43:Core/Src/i2c.c ****   hi2c2.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  58              		.loc 1 43 29
+  59 0016 174B     		ldr	r3, .L6
+  60 0018 0122     		movs	r2, #1
+  61 001a DA60     		str	r2, [r3, #12]
+  44:Core/Src/i2c.c ****   hi2c2.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  62              		.loc 1 44 30
+  63 001c 154B     		ldr	r3, .L6
+  64 001e 0022     		movs	r2, #0
+  65 0020 1A61     		str	r2, [r3, #16]
+  45:Core/Src/i2c.c ****   hi2c2.Init.OwnAddress2 = 0;
+  66              		.loc 1 45 26
+  67 0022 144B     		ldr	r3, .L6
+  68 0024 0022     		movs	r2, #0
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\cc3bHGsA.s 			page 3
+
+
+  69 0026 5A61     		str	r2, [r3, #20]
+  46:Core/Src/i2c.c ****   hi2c2.Init.OwnAddress2Masks = I2C_OA2_NOMASK;
+  70              		.loc 1 46 31
+  71 0028 124B     		ldr	r3, .L6
+  72 002a 0022     		movs	r2, #0
+  73 002c 9A61     		str	r2, [r3, #24]
+  47:Core/Src/i2c.c ****   hi2c2.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  74              		.loc 1 47 30
+  75 002e 114B     		ldr	r3, .L6
+  76 0030 0022     		movs	r2, #0
+  77 0032 DA61     		str	r2, [r3, #28]
+  48:Core/Src/i2c.c ****   hi2c2.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+  78              		.loc 1 48 28
+  79 0034 0F4B     		ldr	r3, .L6
+  80 0036 0022     		movs	r2, #0
+  81 0038 1A62     		str	r2, [r3, #32]
+  49:Core/Src/i2c.c ****   if (HAL_I2C_Init(&hi2c2) != HAL_OK)
+  82              		.loc 1 49 7
+  83 003a 0E4B     		ldr	r3, .L6
+  84 003c 1800     		movs	r0, r3
+  85 003e FFF7FEFF 		bl	HAL_I2C_Init
+  86 0042 031E     		subs	r3, r0, #0
+  87              		.loc 1 49 6
+  88 0044 01D0     		beq	.L2
+  50:Core/Src/i2c.c ****   {
+  51:Core/Src/i2c.c ****     Error_Handler();
+  89              		.loc 1 51 5
+  90 0046 FFF7FEFF 		bl	Error_Handler
+  91              	.L2:
+  52:Core/Src/i2c.c ****   }
+  53:Core/Src/i2c.c **** 
+  54:Core/Src/i2c.c ****   /** Configure Analogue filter
+  55:Core/Src/i2c.c ****   */
+  56:Core/Src/i2c.c ****   if (HAL_I2CEx_ConfigAnalogFilter(&hi2c2, I2C_ANALOGFILTER_ENABLE) != HAL_OK)
+  92              		.loc 1 56 7
+  93 004a 0A4B     		ldr	r3, .L6
+  94 004c 0021     		movs	r1, #0
+  95 004e 1800     		movs	r0, r3
+  96 0050 FFF7FEFF 		bl	HAL_I2CEx_ConfigAnalogFilter
+  97 0054 031E     		subs	r3, r0, #0
+  98              		.loc 1 56 6
+  99 0056 01D0     		beq	.L3
+  57:Core/Src/i2c.c ****   {
+  58:Core/Src/i2c.c ****     Error_Handler();
+ 100              		.loc 1 58 5
+ 101 0058 FFF7FEFF 		bl	Error_Handler
+ 102              	.L3:
+  59:Core/Src/i2c.c ****   }
+  60:Core/Src/i2c.c **** 
+  61:Core/Src/i2c.c ****   /** Configure Digital filter
+  62:Core/Src/i2c.c ****   */
+  63:Core/Src/i2c.c ****   if (HAL_I2CEx_ConfigDigitalFilter(&hi2c2, 0) != HAL_OK)
+ 103              		.loc 1 63 7
+ 104 005c 054B     		ldr	r3, .L6
+ 105 005e 0021     		movs	r1, #0
+ 106 0060 1800     		movs	r0, r3
+ 107 0062 FFF7FEFF 		bl	HAL_I2CEx_ConfigDigitalFilter
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\cc3bHGsA.s 			page 4
+
+
+ 108 0066 031E     		subs	r3, r0, #0
+ 109              		.loc 1 63 6
+ 110 0068 01D0     		beq	.L5
+  64:Core/Src/i2c.c ****   {
+  65:Core/Src/i2c.c ****     Error_Handler();
+ 111              		.loc 1 65 5
+ 112 006a FFF7FEFF 		bl	Error_Handler
+ 113              	.L5:
+  66:Core/Src/i2c.c ****   }
+  67:Core/Src/i2c.c ****   /* USER CODE BEGIN I2C2_Init 2 */
+  68:Core/Src/i2c.c **** 
+  69:Core/Src/i2c.c ****   /* USER CODE END I2C2_Init 2 */
+  70:Core/Src/i2c.c **** 
+  71:Core/Src/i2c.c **** }
+ 114              		.loc 1 71 1
+ 115 006e C046     		nop
+ 116 0070 BD46     		mov	sp, r7
+ 117              		@ sp needed
+ 118 0072 80BD     		pop	{r7, pc}
+ 119              	.L7:
+ 120              		.align	2
+ 121              	.L6:
+ 122 0074 00000000 		.word	hi2c2
+ 123 0078 00580040 		.word	1073764352
+ 124 007c 5B3D3000 		.word	3161435
+ 125              		.cfi_endproc
+ 126              	.LFE47:
+ 128              		.section	.text.HAL_I2C_MspInit,"ax",%progbits
+ 129              		.align	1
+ 130              		.global	HAL_I2C_MspInit
+ 131              		.syntax unified
+ 132              		.code	16
+ 133              		.thumb_func
+ 135              	HAL_I2C_MspInit:
+ 136              	.LFB48:
+  72:Core/Src/i2c.c **** 
+  73:Core/Src/i2c.c **** void HAL_I2C_MspInit(I2C_HandleTypeDef* i2cHandle)
+  74:Core/Src/i2c.c **** {
+ 137              		.loc 1 74 1
+ 138              		.cfi_startproc
+ 139              		@ args = 0, pretend = 0, frame = 32
+ 140              		@ frame_needed = 1, uses_anonymous_args = 0
+ 141 0000 90B5     		push	{r4, r7, lr}
+ 142              	.LCFI2:
+ 143              		.cfi_def_cfa_offset 12
+ 144              		.cfi_offset 4, -12
+ 145              		.cfi_offset 7, -8
+ 146              		.cfi_offset 14, -4
+ 147 0002 89B0     		sub	sp, sp, #36
+ 148              	.LCFI3:
+ 149              		.cfi_def_cfa_offset 48
+ 150 0004 00AF     		add	r7, sp, #0
+ 151              	.LCFI4:
+ 152              		.cfi_def_cfa_register 7
+ 153 0006 7860     		str	r0, [r7, #4]
+  75:Core/Src/i2c.c **** 
+  76:Core/Src/i2c.c ****   GPIO_InitTypeDef GPIO_InitStruct = {0};
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\cc3bHGsA.s 			page 5
+
+
+ 154              		.loc 1 76 20
+ 155 0008 0C24     		movs	r4, #12
+ 156 000a 3B19     		adds	r3, r7, r4
+ 157 000c 1800     		movs	r0, r3
+ 158 000e 1423     		movs	r3, #20
+ 159 0010 1A00     		movs	r2, r3
+ 160 0012 0021     		movs	r1, #0
+ 161 0014 FFF7FEFF 		bl	memset
+  77:Core/Src/i2c.c ****   if(i2cHandle->Instance==I2C2)
+ 162              		.loc 1 77 15
+ 163 0018 7B68     		ldr	r3, [r7, #4]
+ 164 001a 1B68     		ldr	r3, [r3]
+ 165              		.loc 1 77 5
+ 166 001c 184A     		ldr	r2, .L11
+ 167 001e 9342     		cmp	r3, r2
+ 168 0020 29D1     		bne	.L10
+ 169              	.LBB2:
+  78:Core/Src/i2c.c ****   {
+  79:Core/Src/i2c.c ****   /* USER CODE BEGIN I2C2_MspInit 0 */
+  80:Core/Src/i2c.c **** 
+  81:Core/Src/i2c.c ****   /* USER CODE END I2C2_MspInit 0 */
+  82:Core/Src/i2c.c **** 
+  83:Core/Src/i2c.c ****     __HAL_RCC_GPIOB_CLK_ENABLE();
+ 170              		.loc 1 83 5
+ 171 0022 184B     		ldr	r3, .L11+4
+ 172 0024 DA6A     		ldr	r2, [r3, #44]
+ 173 0026 174B     		ldr	r3, .L11+4
+ 174 0028 0221     		movs	r1, #2
+ 175 002a 0A43     		orrs	r2, r1
+ 176 002c DA62     		str	r2, [r3, #44]
+ 177 002e 154B     		ldr	r3, .L11+4
+ 178 0030 DB6A     		ldr	r3, [r3, #44]
+ 179 0032 0222     		movs	r2, #2
+ 180 0034 1340     		ands	r3, r2
+ 181 0036 BB60     		str	r3, [r7, #8]
+ 182 0038 BB68     		ldr	r3, [r7, #8]
+ 183              	.LBE2:
+  84:Core/Src/i2c.c ****     /**I2C2 GPIO Configuration
+  85:Core/Src/i2c.c ****     PB10     ------> I2C2_SCL
+  86:Core/Src/i2c.c ****     PB11     ------> I2C2_SDA
+  87:Core/Src/i2c.c ****     */
+  88:Core/Src/i2c.c ****     GPIO_InitStruct.Pin = GPIO_PIN_10|GPIO_PIN_11;
+ 184              		.loc 1 88 25
+ 185 003a 3B19     		adds	r3, r7, r4
+ 186 003c C022     		movs	r2, #192
+ 187 003e 1201     		lsls	r2, r2, #4
+ 188 0040 1A60     		str	r2, [r3]
+  89:Core/Src/i2c.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
+ 189              		.loc 1 89 26
+ 190 0042 2100     		movs	r1, r4
+ 191 0044 7B18     		adds	r3, r7, r1
+ 192 0046 1222     		movs	r2, #18
+ 193 0048 5A60     		str	r2, [r3, #4]
+  90:Core/Src/i2c.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 194              		.loc 1 90 26
+ 195 004a 7B18     		adds	r3, r7, r1
+ 196 004c 0022     		movs	r2, #0
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\cc3bHGsA.s 			page 6
+
+
+ 197 004e 9A60     		str	r2, [r3, #8]
+  91:Core/Src/i2c.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 198              		.loc 1 91 27
+ 199 0050 7B18     		adds	r3, r7, r1
+ 200 0052 0322     		movs	r2, #3
+ 201 0054 DA60     		str	r2, [r3, #12]
+  92:Core/Src/i2c.c ****     GPIO_InitStruct.Alternate = GPIO_AF6_I2C2;
+ 202              		.loc 1 92 31
+ 203 0056 7B18     		adds	r3, r7, r1
+ 204 0058 0622     		movs	r2, #6
+ 205 005a 1A61     		str	r2, [r3, #16]
+  93:Core/Src/i2c.c ****     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+ 206              		.loc 1 93 5
+ 207 005c 7B18     		adds	r3, r7, r1
+ 208 005e 0A4A     		ldr	r2, .L11+8
+ 209 0060 1900     		movs	r1, r3
+ 210 0062 1000     		movs	r0, r2
+ 211 0064 FFF7FEFF 		bl	HAL_GPIO_Init
+  94:Core/Src/i2c.c **** 
+  95:Core/Src/i2c.c ****     /* I2C2 clock enable */
+  96:Core/Src/i2c.c ****     __HAL_RCC_I2C2_CLK_ENABLE();
+ 212              		.loc 1 96 5
+ 213 0068 064B     		ldr	r3, .L11+4
+ 214 006a 9A6B     		ldr	r2, [r3, #56]
+ 215 006c 054B     		ldr	r3, .L11+4
+ 216 006e 8021     		movs	r1, #128
+ 217 0070 C903     		lsls	r1, r1, #15
+ 218 0072 0A43     		orrs	r2, r1
+ 219 0074 9A63     		str	r2, [r3, #56]
+ 220              	.L10:
+  97:Core/Src/i2c.c ****   /* USER CODE BEGIN I2C2_MspInit 1 */
+  98:Core/Src/i2c.c **** 
+  99:Core/Src/i2c.c ****   /* USER CODE END I2C2_MspInit 1 */
+ 100:Core/Src/i2c.c ****   }
+ 101:Core/Src/i2c.c **** }
+ 221              		.loc 1 101 1
+ 222 0076 C046     		nop
+ 223 0078 BD46     		mov	sp, r7
+ 224 007a 09B0     		add	sp, sp, #36
+ 225              		@ sp needed
+ 226 007c 90BD     		pop	{r4, r7, pc}
+ 227              	.L12:
+ 228 007e C046     		.align	2
+ 229              	.L11:
+ 230 0080 00580040 		.word	1073764352
+ 231 0084 00100240 		.word	1073876992
+ 232 0088 00040050 		.word	1342178304
+ 233              		.cfi_endproc
+ 234              	.LFE48:
+ 236              		.section	.text.HAL_I2C_MspDeInit,"ax",%progbits
+ 237              		.align	1
+ 238              		.global	HAL_I2C_MspDeInit
+ 239              		.syntax unified
+ 240              		.code	16
+ 241              		.thumb_func
+ 243              	HAL_I2C_MspDeInit:
+ 244              	.LFB49:
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\cc3bHGsA.s 			page 7
+
+
+ 102:Core/Src/i2c.c **** 
+ 103:Core/Src/i2c.c **** void HAL_I2C_MspDeInit(I2C_HandleTypeDef* i2cHandle)
+ 104:Core/Src/i2c.c **** {
+ 245              		.loc 1 104 1
+ 246              		.cfi_startproc
+ 247              		@ args = 0, pretend = 0, frame = 8
+ 248              		@ frame_needed = 1, uses_anonymous_args = 0
+ 249 0000 80B5     		push	{r7, lr}
+ 250              	.LCFI5:
+ 251              		.cfi_def_cfa_offset 8
+ 252              		.cfi_offset 7, -8
+ 253              		.cfi_offset 14, -4
+ 254 0002 82B0     		sub	sp, sp, #8
+ 255              	.LCFI6:
+ 256              		.cfi_def_cfa_offset 16
+ 257 0004 00AF     		add	r7, sp, #0
+ 258              	.LCFI7:
+ 259              		.cfi_def_cfa_register 7
+ 260 0006 7860     		str	r0, [r7, #4]
+ 105:Core/Src/i2c.c **** 
+ 106:Core/Src/i2c.c ****   if(i2cHandle->Instance==I2C2)
+ 261              		.loc 1 106 15
+ 262 0008 7B68     		ldr	r3, [r7, #4]
+ 263 000a 1B68     		ldr	r3, [r3]
+ 264              		.loc 1 106 5
+ 265 000c 0D4A     		ldr	r2, .L16
+ 266 000e 9342     		cmp	r3, r2
+ 267 0010 13D1     		bne	.L15
+ 107:Core/Src/i2c.c ****   {
+ 108:Core/Src/i2c.c ****   /* USER CODE BEGIN I2C2_MspDeInit 0 */
+ 109:Core/Src/i2c.c **** 
+ 110:Core/Src/i2c.c ****   /* USER CODE END I2C2_MspDeInit 0 */
+ 111:Core/Src/i2c.c ****     /* Peripheral clock disable */
+ 112:Core/Src/i2c.c ****     __HAL_RCC_I2C2_CLK_DISABLE();
+ 268              		.loc 1 112 5
+ 269 0012 0D4B     		ldr	r3, .L16+4
+ 270 0014 9A6B     		ldr	r2, [r3, #56]
+ 271 0016 0C4B     		ldr	r3, .L16+4
+ 272 0018 0C49     		ldr	r1, .L16+8
+ 273 001a 0A40     		ands	r2, r1
+ 274 001c 9A63     		str	r2, [r3, #56]
+ 113:Core/Src/i2c.c **** 
+ 114:Core/Src/i2c.c ****     /**I2C2 GPIO Configuration
+ 115:Core/Src/i2c.c ****     PB10     ------> I2C2_SCL
+ 116:Core/Src/i2c.c ****     PB11     ------> I2C2_SDA
+ 117:Core/Src/i2c.c ****     */
+ 118:Core/Src/i2c.c ****     HAL_GPIO_DeInit(GPIOB, GPIO_PIN_10);
+ 275              		.loc 1 118 5
+ 276 001e 8023     		movs	r3, #128
+ 277 0020 DB00     		lsls	r3, r3, #3
+ 278 0022 0B4A     		ldr	r2, .L16+12
+ 279 0024 1900     		movs	r1, r3
+ 280 0026 1000     		movs	r0, r2
+ 281 0028 FFF7FEFF 		bl	HAL_GPIO_DeInit
+ 119:Core/Src/i2c.c **** 
+ 120:Core/Src/i2c.c ****     HAL_GPIO_DeInit(GPIOB, GPIO_PIN_11);
+ 282              		.loc 1 120 5
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\cc3bHGsA.s 			page 8
+
+
+ 283 002c 8023     		movs	r3, #128
+ 284 002e 1B01     		lsls	r3, r3, #4
+ 285 0030 074A     		ldr	r2, .L16+12
+ 286 0032 1900     		movs	r1, r3
+ 287 0034 1000     		movs	r0, r2
+ 288 0036 FFF7FEFF 		bl	HAL_GPIO_DeInit
+ 289              	.L15:
+ 121:Core/Src/i2c.c **** 
+ 122:Core/Src/i2c.c ****   /* USER CODE BEGIN I2C2_MspDeInit 1 */
+ 123:Core/Src/i2c.c **** 
+ 124:Core/Src/i2c.c ****   /* USER CODE END I2C2_MspDeInit 1 */
+ 125:Core/Src/i2c.c ****   }
+ 126:Core/Src/i2c.c **** }
+ 290              		.loc 1 126 1
+ 291 003a C046     		nop
+ 292 003c BD46     		mov	sp, r7
+ 293 003e 02B0     		add	sp, sp, #8
+ 294              		@ sp needed
+ 295 0040 80BD     		pop	{r7, pc}
+ 296              	.L17:
+ 297 0042 C046     		.align	2
+ 298              	.L16:
+ 299 0044 00580040 		.word	1073764352
+ 300 0048 00100240 		.word	1073876992
+ 301 004c FFFFBFFF 		.word	-4194305
+ 302 0050 00040050 		.word	1342178304
+ 303              		.cfi_endproc
+ 304              	.LFE49:
+ 306              		.text
+ 307              	.Letext0:
+ 308              		.file 2 "d:\\program files (x86)\\gnu arm embedded toolchain\\10 2021.10\\arm-none-eabi\\include\\
+ 309              		.file 3 "d:\\program files (x86)\\gnu arm embedded toolchain\\10 2021.10\\arm-none-eabi\\include\\
+ 310              		.file 4 "Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l053xx.h"
+ 311              		.file 5 "Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_def.h"
+ 312              		.file 6 "Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_gpio.h"
+ 313              		.file 7 "Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_dma.h"
+ 314              		.file 8 "Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_i2c.h"
+ 315              		.file 9 "Core/Inc/i2c.h"
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\cc3bHGsA.s 			page 9
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 i2c.c
+C:\Users\lidka\AppData\Local\Temp\cc3bHGsA.s:22     .bss.hi2c2:00000000 hi2c2
+C:\Users\lidka\AppData\Local\Temp\cc3bHGsA.s:19     .bss.hi2c2:00000000 $d
+C:\Users\lidka\AppData\Local\Temp\cc3bHGsA.s:25     .text.MX_I2C2_Init:00000000 $t
+C:\Users\lidka\AppData\Local\Temp\cc3bHGsA.s:31     .text.MX_I2C2_Init:00000000 MX_I2C2_Init
+C:\Users\lidka\AppData\Local\Temp\cc3bHGsA.s:122    .text.MX_I2C2_Init:00000074 $d
+C:\Users\lidka\AppData\Local\Temp\cc3bHGsA.s:129    .text.HAL_I2C_MspInit:00000000 $t
+C:\Users\lidka\AppData\Local\Temp\cc3bHGsA.s:135    .text.HAL_I2C_MspInit:00000000 HAL_I2C_MspInit
+C:\Users\lidka\AppData\Local\Temp\cc3bHGsA.s:230    .text.HAL_I2C_MspInit:00000080 $d
+C:\Users\lidka\AppData\Local\Temp\cc3bHGsA.s:237    .text.HAL_I2C_MspDeInit:00000000 $t
+C:\Users\lidka\AppData\Local\Temp\cc3bHGsA.s:243    .text.HAL_I2C_MspDeInit:00000000 HAL_I2C_MspDeInit
+C:\Users\lidka\AppData\Local\Temp\cc3bHGsA.s:299    .text.HAL_I2C_MspDeInit:00000044 $d
+
+UNDEFINED SYMBOLS
+HAL_I2C_Init
+Error_Handler
+HAL_I2CEx_ConfigAnalogFilter
+HAL_I2CEx_ConfigDigitalFilter
+memset
+HAL_GPIO_Init
+HAL_GPIO_DeInit

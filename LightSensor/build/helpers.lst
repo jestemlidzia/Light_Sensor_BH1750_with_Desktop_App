@@ -1,0 +1,868 @@
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccNLKbI1.s 			page 1
+
+
+   1              		.cpu cortex-m0plus
+   2              		.arch armv6s-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 0
+  12              		.eabi_attribute 18, 4
+  13              		.file	"helpers.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.__io_putchar,"ax",%progbits
+  18              		.align	1
+  19              		.global	__io_putchar
+  20              		.syntax unified
+  21              		.code	16
+  22              		.thumb_func
+  24              	__io_putchar:
+  25              	.LFB50:
+  26              		.file 1 "Core/Src/helpers.c"
+   1:Core/Src/helpers.c **** /* Includes ------------------------------------------------------------------*/
+   2:Core/Src/helpers.c **** #include <string.h>
+   3:Core/Src/helpers.c **** #include <stdint.h>
+   4:Core/Src/helpers.c **** #include "helpers.h"
+   5:Core/Src/helpers.c **** #include "ring_buffer.h"
+   6:Core/Src/helpers.c **** #include "bh1750.h"
+   7:Core/Src/helpers.c **** #include "usart.h"
+   8:Core/Src/helpers.c **** #include "main.h"
+   9:Core/Src/helpers.c **** 
+  10:Core/Src/helpers.c **** // UART transmit buffer descriptor
+  11:Core/Src/helpers.c **** extern RingBuffer UART_RingBuffer_Tx;
+  12:Core/Src/helpers.c **** // UART transmit buffer memory pool
+  13:Core/Src/helpers.c **** extern char RingBufferData_Tx[1024];
+  14:Core/Src/helpers.c **** // UART receive buffer descriptor
+  15:Core/Src/helpers.c **** extern RingBuffer UART_RingBuffer_Rx;
+  16:Core/Src/helpers.c **** // UART receive buffer memory pool
+  17:Core/Src/helpers.c **** extern char RingBufferData_Rx[1024];
+  18:Core/Src/helpers.c **** 
+  19:Core/Src/helpers.c **** extern char Response_Rx[1024];
+  20:Core/Src/helpers.c **** extern uint8_t uart_rx_buffer;
+  21:Core/Src/helpers.c **** 
+  22:Core/Src/helpers.c **** // buffer read control flag
+  23:Core/Src/helpers.c **** extern uint8_t readyToRead;
+  24:Core/Src/helpers.c **** // flag controlling the sending of data from the sensor
+  25:Core/Src/helpers.c **** extern uint8_t readyToSend;
+  26:Core/Src/helpers.c **** 
+  27:Core/Src/helpers.c **** int __io_putchar(int ch)
+  28:Core/Src/helpers.c **** {
+  27              		.loc 1 28 1
+  28              		.cfi_startproc
+  29              		@ args = 0, pretend = 0, frame = 16
+  30              		@ frame_needed = 1, uses_anonymous_args = 0
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccNLKbI1.s 			page 2
+
+
+  31 0000 80B5     		push	{r7, lr}
+  32              	.LCFI0:
+  33              		.cfi_def_cfa_offset 8
+  34              		.cfi_offset 7, -8
+  35              		.cfi_offset 14, -4
+  36 0002 84B0     		sub	sp, sp, #16
+  37              	.LCFI1:
+  38              		.cfi_def_cfa_offset 24
+  39 0004 00AF     		add	r7, sp, #0
+  40              	.LCFI2:
+  41              		.cfi_def_cfa_register 7
+  42 0006 7860     		str	r0, [r7, #4]
+  29:Core/Src/helpers.c **** 	if (ch == '\n')
+  43              		.loc 1 29 9
+  44 0008 7B68     		ldr	r3, [r7, #4]
+  45              		.loc 1 29 5
+  46 000a 0A2B     		cmp	r3, #10
+  47 000c 0AD1     		bne	.L2
+  48              	.LBB2:
+  30:Core/Src/helpers.c **** 	{
+  31:Core/Src/helpers.c **** 		uint8_t ch2 = '\r';
+  49              		.loc 1 31 11
+  50 000e 0F21     		movs	r1, #15
+  51 0010 7B18     		adds	r3, r7, r1
+  52 0012 0D22     		movs	r2, #13
+  53 0014 1A70     		strb	r2, [r3]
+  32:Core/Src/helpers.c **** 		HAL_UART_Transmit(&huart2, &ch2, 1, HAL_MAX_DELAY);
+  54              		.loc 1 32 3
+  55 0016 0123     		movs	r3, #1
+  56 0018 5B42     		rsbs	r3, r3, #0
+  57 001a 7918     		adds	r1, r7, r1
+  58 001c 0748     		ldr	r0, .L4
+  59 001e 0122     		movs	r2, #1
+  60 0020 FFF7FEFF 		bl	HAL_UART_Transmit
+  61              	.L2:
+  62              	.LBE2:
+  33:Core/Src/helpers.c **** 	}
+  34:Core/Src/helpers.c **** 
+  35:Core/Src/helpers.c **** 	HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
+  63              		.loc 1 35 2
+  64 0024 0123     		movs	r3, #1
+  65 0026 5B42     		rsbs	r3, r3, #0
+  66 0028 391D     		adds	r1, r7, #4
+  67 002a 0448     		ldr	r0, .L4
+  68 002c 0122     		movs	r2, #1
+  69 002e FFF7FEFF 		bl	HAL_UART_Transmit
+  36:Core/Src/helpers.c **** 	return 1;
+  70              		.loc 1 36 9
+  71 0032 0123     		movs	r3, #1
+  37:Core/Src/helpers.c **** }
+  72              		.loc 1 37 1
+  73 0034 1800     		movs	r0, r3
+  74 0036 BD46     		mov	sp, r7
+  75 0038 04B0     		add	sp, sp, #16
+  76              		@ sp needed
+  77 003a 80BD     		pop	{r7, pc}
+  78              	.L5:
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccNLKbI1.s 			page 3
+
+
+  79              		.align	2
+  80              	.L4:
+  81 003c 00000000 		.word	huart2
+  82              		.cfi_endproc
+  83              	.LFE50:
+  85              		.section	.text.UART_PutChar,"ax",%progbits
+  86              		.align	1
+  87              		.global	UART_PutChar
+  88              		.syntax unified
+  89              		.code	16
+  90              		.thumb_func
+  92              	UART_PutChar:
+  93              	.LFB51:
+  38:Core/Src/helpers.c **** 
+  39:Core/Src/helpers.c **** bool UART_PutChar(char c)
+  40:Core/Src/helpers.c **** {
+  94              		.loc 1 40 1
+  95              		.cfi_startproc
+  96              		@ args = 0, pretend = 0, frame = 16
+  97              		@ frame_needed = 1, uses_anonymous_args = 0
+  98 0000 90B5     		push	{r4, r7, lr}
+  99              	.LCFI3:
+ 100              		.cfi_def_cfa_offset 12
+ 101              		.cfi_offset 4, -12
+ 102              		.cfi_offset 7, -8
+ 103              		.cfi_offset 14, -4
+ 104 0002 85B0     		sub	sp, sp, #20
+ 105              	.LCFI4:
+ 106              		.cfi_def_cfa_offset 32
+ 107 0004 00AF     		add	r7, sp, #0
+ 108              	.LCFI5:
+ 109              		.cfi_def_cfa_register 7
+ 110 0006 0200     		movs	r2, r0
+ 111 0008 FB1D     		adds	r3, r7, #7
+ 112 000a 1A70     		strb	r2, [r3]
+  41:Core/Src/helpers.c **** 	if (RingBuffer_PutChar(&UART_RingBuffer_Tx, c))
+ 113              		.loc 1 41 6
+ 114 000c FB1D     		adds	r3, r7, #7
+ 115 000e 1A78     		ldrb	r2, [r3]
+ 116 0010 0F4B     		ldr	r3, .L12
+ 117 0012 1100     		movs	r1, r2
+ 118 0014 1800     		movs	r0, r3
+ 119 0016 FFF7FEFF 		bl	RingBuffer_PutChar
+ 120 001a 031E     		subs	r3, r0, #0
+ 121              		.loc 1 41 5
+ 122 001c 12D0     		beq	.L7
+ 123              	.LBB3:
+  42:Core/Src/helpers.c **** 	{
+  43:Core/Src/helpers.c **** 
+  44:Core/Src/helpers.c **** 		char temp;
+  45:Core/Src/helpers.c **** 		if (RingBuffer_GetChar(&UART_RingBuffer_Tx, &temp))
+ 124              		.loc 1 45 7
+ 125 001e 0F24     		movs	r4, #15
+ 126 0020 3A19     		adds	r2, r7, r4
+ 127 0022 0B4B     		ldr	r3, .L12
+ 128 0024 1100     		movs	r1, r2
+ 129 0026 1800     		movs	r0, r3
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccNLKbI1.s 			page 4
+
+
+ 130 0028 FFF7FEFF 		bl	RingBuffer_GetChar
+ 131 002c 031E     		subs	r3, r0, #0
+ 132              		.loc 1 45 6
+ 133 002e 07D0     		beq	.L8
+  46:Core/Src/helpers.c **** 		{
+  47:Core/Src/helpers.c **** 			HAL_UART_Transmit(&huart2, &temp, 1, 100);
+ 134              		.loc 1 47 4
+ 135 0030 3919     		adds	r1, r7, r4
+ 136 0032 0848     		ldr	r0, .L12+4
+ 137 0034 6423     		movs	r3, #100
+ 138 0036 0122     		movs	r2, #1
+ 139 0038 FFF7FEFF 		bl	HAL_UART_Transmit
+  48:Core/Src/helpers.c **** 			// HAL_UART_Transmit_IT(&huart2, &temp, 1);
+  49:Core/Src/helpers.c **** 		}
+  50:Core/Src/helpers.c **** 		else
+  51:Core/Src/helpers.c **** 			return false;
+  52:Core/Src/helpers.c **** 
+  53:Core/Src/helpers.c **** 		return true;
+ 140              		.loc 1 53 10
+ 141 003c 0123     		movs	r3, #1
+ 142 003e 02E0     		b	.L11
+ 143              	.L8:
+  51:Core/Src/helpers.c **** 
+ 144              		.loc 1 51 11
+ 145 0040 0023     		movs	r3, #0
+ 146 0042 00E0     		b	.L11
+ 147              	.L7:
+ 148              	.LBE3:
+  54:Core/Src/helpers.c **** 	}
+  55:Core/Src/helpers.c **** 	return false;
+ 149              		.loc 1 55 9
+ 150 0044 0023     		movs	r3, #0
+ 151              	.L11:
+  56:Core/Src/helpers.c **** }
+ 152              		.loc 1 56 1 discriminator 1
+ 153 0046 1800     		movs	r0, r3
+ 154 0048 BD46     		mov	sp, r7
+ 155 004a 05B0     		add	sp, sp, #20
+ 156              		@ sp needed
+ 157 004c 90BD     		pop	{r4, r7, pc}
+ 158              	.L13:
+ 159 004e C046     		.align	2
+ 160              	.L12:
+ 161 0050 00000000 		.word	UART_RingBuffer_Tx
+ 162 0054 00000000 		.word	huart2
+ 163              		.cfi_endproc
+ 164              	.LFE51:
+ 166              		.section	.text.UART_WriteData,"ax",%progbits
+ 167              		.align	1
+ 168              		.global	UART_WriteData
+ 169              		.syntax unified
+ 170              		.code	16
+ 171              		.thumb_func
+ 173              	UART_WriteData:
+ 174              	.LFB52:
+  57:Core/Src/helpers.c **** 
+  58:Core/Src/helpers.c **** size_t UART_WriteData(const void *data, size_t dataSize)
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccNLKbI1.s 			page 5
+
+
+  59:Core/Src/helpers.c **** {
+ 175              		.loc 1 59 1
+ 176              		.cfi_startproc
+ 177              		@ args = 0, pretend = 0, frame = 16
+ 178              		@ frame_needed = 1, uses_anonymous_args = 0
+ 179 0000 80B5     		push	{r7, lr}
+ 180              	.LCFI6:
+ 181              		.cfi_def_cfa_offset 8
+ 182              		.cfi_offset 7, -8
+ 183              		.cfi_offset 14, -4
+ 184 0002 84B0     		sub	sp, sp, #16
+ 185              	.LCFI7:
+ 186              		.cfi_def_cfa_offset 24
+ 187 0004 00AF     		add	r7, sp, #0
+ 188              	.LCFI8:
+ 189              		.cfi_def_cfa_register 7
+ 190 0006 7860     		str	r0, [r7, #4]
+ 191 0008 3960     		str	r1, [r7]
+  60:Core/Src/helpers.c **** 	size_t i = 0;
+ 192              		.loc 1 60 9
+ 193 000a 0023     		movs	r3, #0
+ 194 000c FB60     		str	r3, [r7, #12]
+  61:Core/Src/helpers.c **** 	char const *d = (char const *)data;
+ 195              		.loc 1 61 14
+ 196 000e 7B68     		ldr	r3, [r7, #4]
+ 197 0010 BB60     		str	r3, [r7, #8]
+  62:Core/Src/helpers.c **** 	while (dataSize > 0)
+ 198              		.loc 1 62 8
+ 199 0012 0CE0     		b	.L15
+ 200              	.L16:
+  63:Core/Src/helpers.c **** 	{
+  64:Core/Src/helpers.c **** 		i++;
+ 201              		.loc 1 64 4
+ 202 0014 FB68     		ldr	r3, [r7, #12]
+ 203 0016 0133     		adds	r3, r3, #1
+ 204 0018 FB60     		str	r3, [r7, #12]
+  65:Core/Src/helpers.c **** 		UART_PutChar(*d++);
+ 205              		.loc 1 65 18
+ 206 001a BB68     		ldr	r3, [r7, #8]
+ 207 001c 5A1C     		adds	r2, r3, #1
+ 208 001e BA60     		str	r2, [r7, #8]
+ 209              		.loc 1 65 3
+ 210 0020 1B78     		ldrb	r3, [r3]
+ 211 0022 1800     		movs	r0, r3
+ 212 0024 FFF7FEFF 		bl	UART_PutChar
+  66:Core/Src/helpers.c **** 		dataSize--;
+ 213              		.loc 1 66 11
+ 214 0028 3B68     		ldr	r3, [r7]
+ 215 002a 013B     		subs	r3, r3, #1
+ 216 002c 3B60     		str	r3, [r7]
+ 217              	.L15:
+  62:Core/Src/helpers.c **** 	{
+ 218              		.loc 1 62 8
+ 219 002e 3B68     		ldr	r3, [r7]
+ 220 0030 002B     		cmp	r3, #0
+ 221 0032 EFD1     		bne	.L16
+  67:Core/Src/helpers.c **** 	}
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccNLKbI1.s 			page 6
+
+
+  68:Core/Src/helpers.c **** 	return i;
+ 222              		.loc 1 68 9
+ 223 0034 FB68     		ldr	r3, [r7, #12]
+  69:Core/Src/helpers.c **** }
+ 224              		.loc 1 69 1
+ 225 0036 1800     		movs	r0, r3
+ 226 0038 BD46     		mov	sp, r7
+ 227 003a 04B0     		add	sp, sp, #16
+ 228              		@ sp needed
+ 229 003c 80BD     		pop	{r7, pc}
+ 230              		.cfi_endproc
+ 231              	.LFE52:
+ 233              		.section	.text.UART_WriteString,"ax",%progbits
+ 234              		.align	1
+ 235              		.global	UART_WriteString
+ 236              		.syntax unified
+ 237              		.code	16
+ 238              		.thumb_func
+ 240              	UART_WriteString:
+ 241              	.LFB53:
+  70:Core/Src/helpers.c **** 
+  71:Core/Src/helpers.c **** size_t UART_WriteString(const char *string)
+  72:Core/Src/helpers.c **** {
+ 242              		.loc 1 72 1
+ 243              		.cfi_startproc
+ 244              		@ args = 0, pretend = 0, frame = 8
+ 245              		@ frame_needed = 1, uses_anonymous_args = 0
+ 246 0000 80B5     		push	{r7, lr}
+ 247              	.LCFI9:
+ 248              		.cfi_def_cfa_offset 8
+ 249              		.cfi_offset 7, -8
+ 250              		.cfi_offset 14, -4
+ 251 0002 82B0     		sub	sp, sp, #8
+ 252              	.LCFI10:
+ 253              		.cfi_def_cfa_offset 16
+ 254 0004 00AF     		add	r7, sp, #0
+ 255              	.LCFI11:
+ 256              		.cfi_def_cfa_register 7
+ 257 0006 7860     		str	r0, [r7, #4]
+  73:Core/Src/helpers.c **** 	return UART_WriteData(string, strlen(string) + 2);
+ 258              		.loc 1 73 32
+ 259 0008 7B68     		ldr	r3, [r7, #4]
+ 260 000a 1800     		movs	r0, r3
+ 261 000c FFF7FEFF 		bl	strlen
+ 262 0010 0300     		movs	r3, r0
+ 263              		.loc 1 73 9
+ 264 0012 9A1C     		adds	r2, r3, #2
+ 265 0014 7B68     		ldr	r3, [r7, #4]
+ 266 0016 1100     		movs	r1, r2
+ 267 0018 1800     		movs	r0, r3
+ 268 001a FFF7FEFF 		bl	UART_WriteData
+ 269 001e 0300     		movs	r3, r0
+  74:Core/Src/helpers.c **** }
+ 270              		.loc 1 74 1
+ 271 0020 1800     		movs	r0, r3
+ 272 0022 BD46     		mov	sp, r7
+ 273 0024 02B0     		add	sp, sp, #8
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccNLKbI1.s 			page 7
+
+
+ 274              		@ sp needed
+ 275 0026 80BD     		pop	{r7, pc}
+ 276              		.cfi_endproc
+ 277              	.LFE53:
+ 279              		.section	.text.UART_GetChar,"ax",%progbits
+ 280              		.align	1
+ 281              		.global	UART_GetChar
+ 282              		.syntax unified
+ 283              		.code	16
+ 284              		.thumb_func
+ 286              	UART_GetChar:
+ 287              	.LFB54:
+  75:Core/Src/helpers.c **** 
+  76:Core/Src/helpers.c **** bool UART_GetChar(char *c)
+  77:Core/Src/helpers.c **** {
+ 288              		.loc 1 77 1
+ 289              		.cfi_startproc
+ 290              		@ args = 0, pretend = 0, frame = 16
+ 291              		@ frame_needed = 1, uses_anonymous_args = 0
+ 292 0000 B0B5     		push	{r4, r5, r7, lr}
+ 293              	.LCFI12:
+ 294              		.cfi_def_cfa_offset 16
+ 295              		.cfi_offset 4, -16
+ 296              		.cfi_offset 5, -12
+ 297              		.cfi_offset 7, -8
+ 298              		.cfi_offset 14, -4
+ 299 0002 84B0     		sub	sp, sp, #16
+ 300              	.LCFI13:
+ 301              		.cfi_def_cfa_offset 32
+ 302 0004 00AF     		add	r7, sp, #0
+ 303              	.LCFI14:
+ 304              		.cfi_def_cfa_register 7
+ 305 0006 7860     		str	r0, [r7, #4]
+  78:Core/Src/helpers.c **** 	bool temp = RingBuffer_GetChar(&UART_RingBuffer_Rx, c);
+ 306              		.loc 1 78 14
+ 307 0008 0F25     		movs	r5, #15
+ 308 000a 7C19     		adds	r4, r7, r5
+ 309 000c 7A68     		ldr	r2, [r7, #4]
+ 310 000e 064B     		ldr	r3, .L22
+ 311 0010 1100     		movs	r1, r2
+ 312 0012 1800     		movs	r0, r3
+ 313 0014 FFF7FEFF 		bl	RingBuffer_GetChar
+ 314 0018 0300     		movs	r3, r0
+ 315 001a 2370     		strb	r3, [r4]
+  79:Core/Src/helpers.c **** 	return temp;
+ 316              		.loc 1 79 9
+ 317 001c 7B19     		adds	r3, r7, r5
+ 318 001e 1B78     		ldrb	r3, [r3]
+  80:Core/Src/helpers.c **** }
+ 319              		.loc 1 80 1
+ 320 0020 1800     		movs	r0, r3
+ 321 0022 BD46     		mov	sp, r7
+ 322 0024 04B0     		add	sp, sp, #16
+ 323              		@ sp needed
+ 324 0026 B0BD     		pop	{r4, r5, r7, pc}
+ 325              	.L23:
+ 326              		.align	2
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccNLKbI1.s 			page 8
+
+
+ 327              	.L22:
+ 328 0028 00000000 		.word	UART_RingBuffer_Rx
+ 329              		.cfi_endproc
+ 330              	.LFE54:
+ 332              		.section	.text.UART_ReadData,"ax",%progbits
+ 333              		.align	1
+ 334              		.global	UART_ReadData
+ 335              		.syntax unified
+ 336              		.code	16
+ 337              		.thumb_func
+ 339              	UART_ReadData:
+ 340              	.LFB55:
+  81:Core/Src/helpers.c **** 
+  82:Core/Src/helpers.c **** size_t UART_ReadData(char *data, size_t maxSize)
+  83:Core/Src/helpers.c **** {
+ 341              		.loc 1 83 1
+ 342              		.cfi_startproc
+ 343              		@ args = 0, pretend = 0, frame = 16
+ 344              		@ frame_needed = 1, uses_anonymous_args = 0
+ 345 0000 80B5     		push	{r7, lr}
+ 346              	.LCFI15:
+ 347              		.cfi_def_cfa_offset 8
+ 348              		.cfi_offset 7, -8
+ 349              		.cfi_offset 14, -4
+ 350 0002 84B0     		sub	sp, sp, #16
+ 351              	.LCFI16:
+ 352              		.cfi_def_cfa_offset 24
+ 353 0004 00AF     		add	r7, sp, #0
+ 354              	.LCFI17:
+ 355              		.cfi_def_cfa_register 7
+ 356 0006 7860     		str	r0, [r7, #4]
+ 357 0008 3960     		str	r1, [r7]
+  84:Core/Src/helpers.c **** 
+  85:Core/Src/helpers.c **** 	size_t i = 0;
+ 358              		.loc 1 85 9
+ 359 000a 0023     		movs	r3, #0
+ 360 000c FB60     		str	r3, [r7, #12]
+  86:Core/Src/helpers.c **** 
+  87:Core/Src/helpers.c **** 	while (maxSize > i)
+ 361              		.loc 1 87 8
+ 362 000e 11E0     		b	.L25
+ 363              	.L28:
+  88:Core/Src/helpers.c **** 	{
+  89:Core/Src/helpers.c **** 
+  90:Core/Src/helpers.c **** 		if (!UART_GetChar(data + i))
+ 364              		.loc 1 90 8
+ 365 0010 7A68     		ldr	r2, [r7, #4]
+ 366 0012 FB68     		ldr	r3, [r7, #12]
+ 367 0014 D318     		adds	r3, r2, r3
+ 368 0016 1800     		movs	r0, r3
+ 369 0018 FFF7FEFF 		bl	UART_GetChar
+ 370 001c 0300     		movs	r3, r0
+ 371 001e 1A00     		movs	r2, r3
+ 372              		.loc 1 90 7
+ 373 0020 0123     		movs	r3, #1
+ 374 0022 5340     		eors	r3, r2
+ 375 0024 DBB2     		uxtb	r3, r3
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccNLKbI1.s 			page 9
+
+
+ 376              		.loc 1 90 6
+ 377 0026 002B     		cmp	r3, #0
+ 378 0028 01D0     		beq	.L26
+  91:Core/Src/helpers.c **** 		{
+  92:Core/Src/helpers.c **** 			return i;
+ 379              		.loc 1 92 11
+ 380 002a FB68     		ldr	r3, [r7, #12]
+ 381 002c 07E0     		b	.L27
+ 382              	.L26:
+  93:Core/Src/helpers.c **** 		}
+  94:Core/Src/helpers.c **** 		i++;
+ 383              		.loc 1 94 4
+ 384 002e FB68     		ldr	r3, [r7, #12]
+ 385 0030 0133     		adds	r3, r3, #1
+ 386 0032 FB60     		str	r3, [r7, #12]
+ 387              	.L25:
+  87:Core/Src/helpers.c **** 	{
+ 388              		.loc 1 87 8
+ 389 0034 3A68     		ldr	r2, [r7]
+ 390 0036 FB68     		ldr	r3, [r7, #12]
+ 391 0038 9A42     		cmp	r2, r3
+ 392 003a E9D8     		bhi	.L28
+  95:Core/Src/helpers.c **** 	}
+  96:Core/Src/helpers.c **** 	return i;
+ 393              		.loc 1 96 9
+ 394 003c FB68     		ldr	r3, [r7, #12]
+ 395              	.L27:
+  97:Core/Src/helpers.c **** }
+ 396              		.loc 1 97 1
+ 397 003e 1800     		movs	r0, r3
+ 398 0040 BD46     		mov	sp, r7
+ 399 0042 04B0     		add	sp, sp, #16
+ 400              		@ sp needed
+ 401 0044 80BD     		pop	{r7, pc}
+ 402              		.cfi_endproc
+ 403              	.LFE55:
+ 405              		.section	.text.char_append,"ax",%progbits
+ 406              		.align	1
+ 407              		.global	char_append
+ 408              		.syntax unified
+ 409              		.code	16
+ 410              		.thumb_func
+ 412              	char_append:
+ 413              	.LFB56:
+  98:Core/Src/helpers.c **** 
+  99:Core/Src/helpers.c **** void char_append(uint8_t value)
+ 100:Core/Src/helpers.c **** {
+ 414              		.loc 1 100 1
+ 415              		.cfi_startproc
+ 416              		@ args = 0, pretend = 0, frame = 8
+ 417              		@ frame_needed = 1, uses_anonymous_args = 0
+ 418 0000 80B5     		push	{r7, lr}
+ 419              	.LCFI18:
+ 420              		.cfi_def_cfa_offset 8
+ 421              		.cfi_offset 7, -8
+ 422              		.cfi_offset 14, -4
+ 423 0002 82B0     		sub	sp, sp, #8
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccNLKbI1.s 			page 10
+
+
+ 424              	.LCFI19:
+ 425              		.cfi_def_cfa_offset 16
+ 426 0004 00AF     		add	r7, sp, #0
+ 427              	.LCFI20:
+ 428              		.cfi_def_cfa_register 7
+ 429 0006 0200     		movs	r2, r0
+ 430 0008 FB1D     		adds	r3, r7, #7
+ 431 000a 1A70     		strb	r2, [r3]
+ 101:Core/Src/helpers.c **** 	if (value == '\r' || value == '\n')
+ 432              		.loc 1 101 5
+ 433 000c FB1D     		adds	r3, r7, #7
+ 434 000e 1B78     		ldrb	r3, [r3]
+ 435 0010 0D2B     		cmp	r3, #13
+ 436 0012 03D0     		beq	.L30
+ 437              		.loc 1 101 20 discriminator 1
+ 438 0014 FB1D     		adds	r3, r7, #7
+ 439 0016 1B78     		ldrb	r3, [r3]
+ 440 0018 0A2B     		cmp	r3, #10
+ 441 001a 03D1     		bne	.L31
+ 442              	.L30:
+ 102:Core/Src/helpers.c **** 	{ // end of line
+ 103:Core/Src/helpers.c **** 		readyToRead = 1;
+ 443              		.loc 1 103 15
+ 444 001c 074B     		ldr	r3, .L33
+ 445 001e 0122     		movs	r2, #1
+ 446 0020 1A70     		strb	r2, [r3]
+ 447 0022 07E0     		b	.L32
+ 448              	.L31:
+ 104:Core/Src/helpers.c **** 	}
+ 105:Core/Src/helpers.c **** 	else
+ 106:Core/Src/helpers.c **** 	{
+ 107:Core/Src/helpers.c **** 		RingBuffer_PutChar(&UART_RingBuffer_Rx, uart_rx_buffer);
+ 449              		.loc 1 107 3
+ 450 0024 064B     		ldr	r3, .L33+4
+ 451 0026 1A78     		ldrb	r2, [r3]
+ 452 0028 064B     		ldr	r3, .L33+8
+ 453 002a 1100     		movs	r1, r2
+ 454 002c 1800     		movs	r0, r3
+ 455 002e FFF7FEFF 		bl	RingBuffer_PutChar
+ 108:Core/Src/helpers.c **** 	}
+ 109:Core/Src/helpers.c **** }
+ 456              		.loc 1 109 1
+ 457 0032 C046     		nop
+ 458              	.L32:
+ 459 0034 C046     		nop
+ 460 0036 BD46     		mov	sp, r7
+ 461 0038 02B0     		add	sp, sp, #8
+ 462              		@ sp needed
+ 463 003a 80BD     		pop	{r7, pc}
+ 464              	.L34:
+ 465              		.align	2
+ 466              	.L33:
+ 467 003c 00000000 		.word	readyToRead
+ 468 0040 00000000 		.word	uart_rx_buffer
+ 469 0044 00000000 		.word	UART_RingBuffer_Rx
+ 470              		.cfi_endproc
+ 471              	.LFE56:
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccNLKbI1.s 			page 11
+
+
+ 473              		.section	.rodata
+ 474              		.align	2
+ 475              	.LC9:
+ 476 0000 72656164 		.ascii	"readValue\000"
+ 476      56616C75 
+ 476      6500
+ 477 000a 0000     		.align	2
+ 478              	.LC12:
+ 479 000c 696E6353 		.ascii	"incSens\000"
+ 479      656E7300 
+ 480              		.align	2
+ 481              	.LC14:
+ 482 0014 64656353 		.ascii	"decSens\000"
+ 482      656E7300 
+ 483              		.align	2
+ 484              	.LC16:
+ 485 001c 68656C70 		.ascii	"help\000"
+ 485      00
+ 486              		.section	.text.UART_ReadResponse,"ax",%progbits
+ 487              		.align	1
+ 488              		.global	UART_ReadResponse
+ 489              		.syntax unified
+ 490              		.code	16
+ 491              		.thumb_func
+ 493              	UART_ReadResponse:
+ 494              	.LFB57:
+ 110:Core/Src/helpers.c **** 
+ 111:Core/Src/helpers.c **** void UART_ReadResponse()
+ 112:Core/Src/helpers.c **** {
+ 495              		.loc 1 112 1
+ 496              		.cfi_startproc
+ 497              		@ args = 0, pretend = 0, frame = 8
+ 498              		@ frame_needed = 1, uses_anonymous_args = 0
+ 499 0000 80B5     		push	{r7, lr}
+ 500              	.LCFI21:
+ 501              		.cfi_def_cfa_offset 8
+ 502              		.cfi_offset 7, -8
+ 503              		.cfi_offset 14, -4
+ 504 0002 82B0     		sub	sp, sp, #8
+ 505              	.LCFI22:
+ 506              		.cfi_def_cfa_offset 16
+ 507 0004 00AF     		add	r7, sp, #0
+ 508              	.LCFI23:
+ 509              		.cfi_def_cfa_register 7
+ 113:Core/Src/helpers.c **** 	if (!RingBuffer_IsEmpty(&UART_RingBuffer_Rx))
+ 510              		.loc 1 113 7
+ 511 0006 274B     		ldr	r3, .L42
+ 512 0008 1800     		movs	r0, r3
+ 513 000a FFF7FEFF 		bl	RingBuffer_IsEmpty
+ 514 000e 0300     		movs	r3, r0
+ 515 0010 1A00     		movs	r2, r3
+ 516              		.loc 1 113 6
+ 517 0012 0123     		movs	r3, #1
+ 518 0014 5340     		eors	r3, r2
+ 519 0016 DBB2     		uxtb	r3, r3
+ 520              		.loc 1 113 5
+ 521 0018 002B     		cmp	r3, #0
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccNLKbI1.s 			page 12
+
+
+ 522 001a 3ED0     		beq	.L41
+ 523              	.LBB4:
+ 114:Core/Src/helpers.c **** 	{
+ 115:Core/Src/helpers.c **** 		size_t responseSize = UART_ReadData(&Response_Rx, 10);
+ 524              		.loc 1 115 25
+ 525 001c 224B     		ldr	r3, .L42+4
+ 526 001e 0A21     		movs	r1, #10
+ 527 0020 1800     		movs	r0, r3
+ 528 0022 FFF7FEFF 		bl	UART_ReadData
+ 529 0026 0300     		movs	r3, r0
+ 530 0028 7B60     		str	r3, [r7, #4]
+ 116:Core/Src/helpers.c **** 		Response_Rx[responseSize] = '\0';
+ 531              		.loc 1 116 29
+ 532 002a 1F4A     		ldr	r2, .L42+4
+ 533 002c 7B68     		ldr	r3, [r7, #4]
+ 534 002e D318     		adds	r3, r2, r3
+ 535 0030 0022     		movs	r2, #0
+ 536 0032 1A70     		strb	r2, [r3]
+ 117:Core/Src/helpers.c **** 		if (strcmp(Response_Rx, "readValue") == 0)
+ 537              		.loc 1 117 7
+ 538 0034 1D4A     		ldr	r2, .L42+8
+ 539 0036 1C4B     		ldr	r3, .L42+4
+ 540 0038 1100     		movs	r1, r2
+ 541 003a 1800     		movs	r0, r3
+ 542 003c FFF7FEFF 		bl	strcmp
+ 543 0040 031E     		subs	r3, r0, #0
+ 544              		.loc 1 117 6
+ 545 0042 03D1     		bne	.L37
+ 118:Core/Src/helpers.c **** 		{
+ 119:Core/Src/helpers.c **** 			readyToSend = 1;
+ 546              		.loc 1 119 16
+ 547 0044 1A4B     		ldr	r3, .L42+12
+ 548 0046 0122     		movs	r2, #1
+ 549 0048 1A70     		strb	r2, [r3]
+ 550              	.LBE4:
+ 120:Core/Src/helpers.c **** 		}
+ 121:Core/Src/helpers.c **** 		else if (strcmp(Response_Rx, "incSens") == 0)
+ 122:Core/Src/helpers.c **** 		{
+ 123:Core/Src/helpers.c **** 			readyToSend = 2;
+ 124:Core/Src/helpers.c **** 		}
+ 125:Core/Src/helpers.c **** 		else if (strcmp(Response_Rx, "decSens") == 0)
+ 126:Core/Src/helpers.c **** 		{
+ 127:Core/Src/helpers.c **** 			readyToSend = 3;
+ 128:Core/Src/helpers.c **** 		}
+ 129:Core/Src/helpers.c **** 		else if (strcmp(Response_Rx, "help") == 0)
+ 130:Core/Src/helpers.c **** 		{
+ 131:Core/Src/helpers.c **** 			readyToSend = 4;
+ 132:Core/Src/helpers.c **** 		}
+ 133:Core/Src/helpers.c **** 		else
+ 134:Core/Src/helpers.c **** 		{
+ 135:Core/Src/helpers.c **** 			readyToSend = 5;
+ 136:Core/Src/helpers.c **** 		}
+ 137:Core/Src/helpers.c **** 	}
+ 138:Core/Src/helpers.c **** }
+ 551              		.loc 1 138 1
+ 552 004a 26E0     		b	.L41
+ 553              	.L37:
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccNLKbI1.s 			page 13
+
+
+ 554              	.LBB5:
+ 121:Core/Src/helpers.c **** 		{
+ 555              		.loc 1 121 12
+ 556 004c 194A     		ldr	r2, .L42+16
+ 557 004e 164B     		ldr	r3, .L42+4
+ 558 0050 1100     		movs	r1, r2
+ 559 0052 1800     		movs	r0, r3
+ 560 0054 FFF7FEFF 		bl	strcmp
+ 561 0058 031E     		subs	r3, r0, #0
+ 121:Core/Src/helpers.c **** 		{
+ 562              		.loc 1 121 11
+ 563 005a 03D1     		bne	.L38
+ 123:Core/Src/helpers.c **** 		}
+ 564              		.loc 1 123 16
+ 565 005c 144B     		ldr	r3, .L42+12
+ 566 005e 0222     		movs	r2, #2
+ 567 0060 1A70     		strb	r2, [r3]
+ 568              	.LBE5:
+ 569              		.loc 1 138 1
+ 570 0062 1AE0     		b	.L41
+ 571              	.L38:
+ 572              	.LBB6:
+ 125:Core/Src/helpers.c **** 		{
+ 573              		.loc 1 125 12
+ 574 0064 144A     		ldr	r2, .L42+20
+ 575 0066 104B     		ldr	r3, .L42+4
+ 576 0068 1100     		movs	r1, r2
+ 577 006a 1800     		movs	r0, r3
+ 578 006c FFF7FEFF 		bl	strcmp
+ 579 0070 031E     		subs	r3, r0, #0
+ 125:Core/Src/helpers.c **** 		{
+ 580              		.loc 1 125 11
+ 581 0072 03D1     		bne	.L39
+ 127:Core/Src/helpers.c **** 		}
+ 582              		.loc 1 127 16
+ 583 0074 0E4B     		ldr	r3, .L42+12
+ 584 0076 0322     		movs	r2, #3
+ 585 0078 1A70     		strb	r2, [r3]
+ 586              	.LBE6:
+ 587              		.loc 1 138 1
+ 588 007a 0EE0     		b	.L41
+ 589              	.L39:
+ 590              	.LBB7:
+ 129:Core/Src/helpers.c **** 		{
+ 591              		.loc 1 129 12
+ 592 007c 0F4A     		ldr	r2, .L42+24
+ 593 007e 0A4B     		ldr	r3, .L42+4
+ 594 0080 1100     		movs	r1, r2
+ 595 0082 1800     		movs	r0, r3
+ 596 0084 FFF7FEFF 		bl	strcmp
+ 597 0088 031E     		subs	r3, r0, #0
+ 129:Core/Src/helpers.c **** 		{
+ 598              		.loc 1 129 11
+ 599 008a 03D1     		bne	.L40
+ 131:Core/Src/helpers.c **** 		}
+ 600              		.loc 1 131 16
+ 601 008c 084B     		ldr	r3, .L42+12
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccNLKbI1.s 			page 14
+
+
+ 602 008e 0422     		movs	r2, #4
+ 603 0090 1A70     		strb	r2, [r3]
+ 604              	.LBE7:
+ 605              		.loc 1 138 1
+ 606 0092 02E0     		b	.L41
+ 607              	.L40:
+ 608              	.LBB8:
+ 135:Core/Src/helpers.c **** 		}
+ 609              		.loc 1 135 16
+ 610 0094 064B     		ldr	r3, .L42+12
+ 611 0096 0522     		movs	r2, #5
+ 612 0098 1A70     		strb	r2, [r3]
+ 613              	.L41:
+ 614              	.LBE8:
+ 615              		.loc 1 138 1
+ 616 009a C046     		nop
+ 617 009c BD46     		mov	sp, r7
+ 618 009e 02B0     		add	sp, sp, #8
+ 619              		@ sp needed
+ 620 00a0 80BD     		pop	{r7, pc}
+ 621              	.L43:
+ 622 00a2 C046     		.align	2
+ 623              	.L42:
+ 624 00a4 00000000 		.word	UART_RingBuffer_Rx
+ 625 00a8 00000000 		.word	Response_Rx
+ 626 00ac 00000000 		.word	.LC9
+ 627 00b0 00000000 		.word	readyToSend
+ 628 00b4 0C000000 		.word	.LC12
+ 629 00b8 14000000 		.word	.LC14
+ 630 00bc 1C000000 		.word	.LC16
+ 631              		.cfi_endproc
+ 632              	.LFE57:
+ 634              		.text
+ 635              	.Letext0:
+ 636              		.file 2 "d:\\program files (x86)\\gnu arm embedded toolchain\\10 2021.10\\lib\\gcc\\arm-none-eabi\
+ 637              		.file 3 "d:\\program files (x86)\\gnu arm embedded toolchain\\10 2021.10\\arm-none-eabi\\include\\
+ 638              		.file 4 "d:\\program files (x86)\\gnu arm embedded toolchain\\10 2021.10\\arm-none-eabi\\include\\
+ 639              		.file 5 "Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l053xx.h"
+ 640              		.file 6 "Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_def.h"
+ 641              		.file 7 "Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_dma.h"
+ 642              		.file 8 "Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_uart.h"
+ 643              		.file 9 "Core/Inc/ring_buffer.h"
+ 644              		.file 10 "Core/Inc/usart.h"
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccNLKbI1.s 			page 15
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 helpers.c
+C:\Users\lidka\AppData\Local\Temp\ccNLKbI1.s:18     .text.__io_putchar:00000000 $t
+C:\Users\lidka\AppData\Local\Temp\ccNLKbI1.s:24     .text.__io_putchar:00000000 __io_putchar
+C:\Users\lidka\AppData\Local\Temp\ccNLKbI1.s:81     .text.__io_putchar:0000003c $d
+C:\Users\lidka\AppData\Local\Temp\ccNLKbI1.s:86     .text.UART_PutChar:00000000 $t
+C:\Users\lidka\AppData\Local\Temp\ccNLKbI1.s:92     .text.UART_PutChar:00000000 UART_PutChar
+C:\Users\lidka\AppData\Local\Temp\ccNLKbI1.s:161    .text.UART_PutChar:00000050 $d
+C:\Users\lidka\AppData\Local\Temp\ccNLKbI1.s:167    .text.UART_WriteData:00000000 $t
+C:\Users\lidka\AppData\Local\Temp\ccNLKbI1.s:173    .text.UART_WriteData:00000000 UART_WriteData
+C:\Users\lidka\AppData\Local\Temp\ccNLKbI1.s:234    .text.UART_WriteString:00000000 $t
+C:\Users\lidka\AppData\Local\Temp\ccNLKbI1.s:240    .text.UART_WriteString:00000000 UART_WriteString
+C:\Users\lidka\AppData\Local\Temp\ccNLKbI1.s:280    .text.UART_GetChar:00000000 $t
+C:\Users\lidka\AppData\Local\Temp\ccNLKbI1.s:286    .text.UART_GetChar:00000000 UART_GetChar
+C:\Users\lidka\AppData\Local\Temp\ccNLKbI1.s:328    .text.UART_GetChar:00000028 $d
+C:\Users\lidka\AppData\Local\Temp\ccNLKbI1.s:333    .text.UART_ReadData:00000000 $t
+C:\Users\lidka\AppData\Local\Temp\ccNLKbI1.s:339    .text.UART_ReadData:00000000 UART_ReadData
+C:\Users\lidka\AppData\Local\Temp\ccNLKbI1.s:406    .text.char_append:00000000 $t
+C:\Users\lidka\AppData\Local\Temp\ccNLKbI1.s:412    .text.char_append:00000000 char_append
+C:\Users\lidka\AppData\Local\Temp\ccNLKbI1.s:467    .text.char_append:0000003c $d
+C:\Users\lidka\AppData\Local\Temp\ccNLKbI1.s:474    .rodata:00000000 $d
+C:\Users\lidka\AppData\Local\Temp\ccNLKbI1.s:487    .text.UART_ReadResponse:00000000 $t
+C:\Users\lidka\AppData\Local\Temp\ccNLKbI1.s:493    .text.UART_ReadResponse:00000000 UART_ReadResponse
+C:\Users\lidka\AppData\Local\Temp\ccNLKbI1.s:624    .text.UART_ReadResponse:000000a4 $d
+
+UNDEFINED SYMBOLS
+HAL_UART_Transmit
+huart2
+RingBuffer_PutChar
+RingBuffer_GetChar
+UART_RingBuffer_Tx
+strlen
+UART_RingBuffer_Rx
+readyToRead
+uart_rx_buffer
+RingBuffer_IsEmpty
+strcmp
+Response_Rx
+readyToSend

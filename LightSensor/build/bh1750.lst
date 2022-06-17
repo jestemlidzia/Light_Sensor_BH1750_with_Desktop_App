@@ -1,0 +1,727 @@
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccpNpXIj.s 			page 1
+
+
+   1              		.cpu cortex-m0plus
+   2              		.arch armv6s-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 0
+  12              		.eabi_attribute 18, 4
+  13              		.file	"bh1750.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.BH1750_Init,"ax",%progbits
+  18              		.align	1
+  19              		.global	BH1750_Init
+  20              		.syntax unified
+  21              		.code	16
+  22              		.thumb_func
+  24              	BH1750_Init:
+  25              	.LFB47:
+  26              		.file 1 "Core/Src/bh1750.c"
+   1:Core/Src/bh1750.c **** #include "bh1750.h"
+   2:Core/Src/bh1750.c **** #include <stdint.h>
+   3:Core/Src/bh1750.c **** 
+   4:Core/Src/bh1750.c **** BH1750_Status BH1750_Init(BH1750_t *sensor)
+   5:Core/Src/bh1750.c **** {
+  27              		.loc 1 5 1
+  28              		.cfi_startproc
+  29              		@ args = 0, pretend = 0, frame = 8
+  30              		@ frame_needed = 1, uses_anonymous_args = 0
+  31 0000 80B5     		push	{r7, lr}
+  32              	.LCFI0:
+  33              		.cfi_def_cfa_offset 8
+  34              		.cfi_offset 7, -8
+  35              		.cfi_offset 14, -4
+  36 0002 82B0     		sub	sp, sp, #8
+  37              	.LCFI1:
+  38              		.cfi_def_cfa_offset 16
+  39 0004 00AF     		add	r7, sp, #0
+  40              	.LCFI2:
+  41              		.cfi_def_cfa_register 7
+  42 0006 7860     		str	r0, [r7, #4]
+   6:Core/Src/bh1750.c **** 
+   7:Core/Src/bh1750.c **** 	if (BH1750_OK != BH1750_Reset(sensor))
+  43              		.loc 1 7 19
+  44 0008 7B68     		ldr	r3, [r7, #4]
+  45 000a 1800     		movs	r0, r3
+  46 000c FFF7FEFF 		bl	BH1750_Reset
+  47 0010 0300     		movs	r3, r0
+  48              		.loc 1 7 5
+  49 0012 012B     		cmp	r3, #1
+  50 0014 01D0     		beq	.L2
+   8:Core/Src/bh1750.c **** 		return BH1750_ERROR;
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccpNpXIj.s 			page 2
+
+
+  51              		.loc 1 8 10
+  52 0016 0023     		movs	r3, #0
+  53 0018 18E0     		b	.L3
+  54              	.L2:
+   9:Core/Src/bh1750.c **** 
+  10:Core/Src/bh1750.c **** 	if (BH1750_OK != BH1750_setMTreg(sensor, sensor->BH1750_MTreg))
+  55              		.loc 1 10 19
+  56 001a 7B68     		ldr	r3, [r7, #4]
+  57 001c 5A79     		ldrb	r2, [r3, #5]
+  58 001e 7B68     		ldr	r3, [r7, #4]
+  59 0020 1100     		movs	r1, r2
+  60 0022 1800     		movs	r0, r3
+  61 0024 FFF7FEFF 		bl	BH1750_setMTreg
+  62 0028 0300     		movs	r3, r0
+  63              		.loc 1 10 5
+  64 002a 012B     		cmp	r3, #1
+  65 002c 01D0     		beq	.L4
+  11:Core/Src/bh1750.c **** 		return BH1750_ERROR;
+  66              		.loc 1 11 10
+  67 002e 0023     		movs	r3, #0
+  68 0030 0CE0     		b	.L3
+  69              	.L4:
+  12:Core/Src/bh1750.c **** 
+  13:Core/Src/bh1750.c **** 	if (BH1750_OK != BH1750_setMode(sensor, sensor->BH1750_Mode))
+  70              		.loc 1 13 19
+  71 0032 7B68     		ldr	r3, [r7, #4]
+  72 0034 1A79     		ldrb	r2, [r3, #4]
+  73 0036 7B68     		ldr	r3, [r7, #4]
+  74 0038 1100     		movs	r1, r2
+  75 003a 1800     		movs	r0, r3
+  76 003c FFF7FEFF 		bl	BH1750_setMode
+  77 0040 0300     		movs	r3, r0
+  78              		.loc 1 13 5
+  79 0042 012B     		cmp	r3, #1
+  80 0044 01D0     		beq	.L5
+  14:Core/Src/bh1750.c **** 		return BH1750_ERROR;
+  81              		.loc 1 14 10
+  82 0046 0023     		movs	r3, #0
+  83 0048 00E0     		b	.L3
+  84              	.L5:
+  15:Core/Src/bh1750.c **** 
+  16:Core/Src/bh1750.c **** 	return BH1750_OK;
+  85              		.loc 1 16 9
+  86 004a 0123     		movs	r3, #1
+  87              	.L3:
+  17:Core/Src/bh1750.c **** }
+  88              		.loc 1 17 1
+  89 004c 1800     		movs	r0, r3
+  90 004e BD46     		mov	sp, r7
+  91 0050 02B0     		add	sp, sp, #8
+  92              		@ sp needed
+  93 0052 80BD     		pop	{r7, pc}
+  94              		.cfi_endproc
+  95              	.LFE47:
+  97              		.section	.text.BH1750_changePowerState,"ax",%progbits
+  98              		.align	1
+  99              		.global	BH1750_changePowerState
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccpNpXIj.s 			page 3
+
+
+ 100              		.syntax unified
+ 101              		.code	16
+ 102              		.thumb_func
+ 104              	BH1750_changePowerState:
+ 105              	.LFB48:
+  18:Core/Src/bh1750.c **** 
+  19:Core/Src/bh1750.c **** BH1750_Status BH1750_changePowerState(BH1750_t *sensor, BH1750_powerState powerState)
+  20:Core/Src/bh1750.c **** {
+ 106              		.loc 1 20 1
+ 107              		.cfi_startproc
+ 108              		@ args = 0, pretend = 0, frame = 8
+ 109              		@ frame_needed = 1, uses_anonymous_args = 0
+ 110 0000 80B5     		push	{r7, lr}
+ 111              	.LCFI3:
+ 112              		.cfi_def_cfa_offset 8
+ 113              		.cfi_offset 7, -8
+ 114              		.cfi_offset 14, -4
+ 115 0002 84B0     		sub	sp, sp, #16
+ 116              	.LCFI4:
+ 117              		.cfi_def_cfa_offset 24
+ 118 0004 02AF     		add	r7, sp, #8
+ 119              	.LCFI5:
+ 120              		.cfi_def_cfa 7, 16
+ 121 0006 7860     		str	r0, [r7, #4]
+ 122 0008 0A00     		movs	r2, r1
+ 123 000a FB1C     		adds	r3, r7, #3
+ 124 000c 1A70     		strb	r2, [r3]
+  21:Core/Src/bh1750.c **** 	if (HAL_OK != HAL_I2C_Master_Transmit(sensor->BH1750_i2c, sensor->BH1750_ADDR, &powerState, 1, TIM
+ 125              		.loc 1 21 16
+ 126 000e 7B68     		ldr	r3, [r7, #4]
+ 127 0010 1868     		ldr	r0, [r3]
+ 128 0012 7B68     		ldr	r3, [r7, #4]
+ 129 0014 D988     		ldrh	r1, [r3, #6]
+ 130 0016 FA1C     		adds	r2, r7, #3
+ 131 0018 0A23     		movs	r3, #10
+ 132 001a 0093     		str	r3, [sp]
+ 133 001c 0123     		movs	r3, #1
+ 134 001e FFF7FEFF 		bl	HAL_I2C_Master_Transmit
+ 135 0022 031E     		subs	r3, r0, #0
+ 136              		.loc 1 21 5
+ 137 0024 01D0     		beq	.L7
+  22:Core/Src/bh1750.c **** 		return BH1750_ERROR;
+ 138              		.loc 1 22 10
+ 139 0026 0023     		movs	r3, #0
+ 140 0028 00E0     		b	.L8
+ 141              	.L7:
+  23:Core/Src/bh1750.c **** 
+  24:Core/Src/bh1750.c **** 	return BH1750_OK;
+ 142              		.loc 1 24 9
+ 143 002a 0123     		movs	r3, #1
+ 144              	.L8:
+  25:Core/Src/bh1750.c **** }
+ 145              		.loc 1 25 1
+ 146 002c 1800     		movs	r0, r3
+ 147 002e BD46     		mov	sp, r7
+ 148 0030 02B0     		add	sp, sp, #8
+ 149              		@ sp needed
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccpNpXIj.s 			page 4
+
+
+ 150 0032 80BD     		pop	{r7, pc}
+ 151              		.cfi_endproc
+ 152              	.LFE48:
+ 154              		.section	.text.BH1750_Reset,"ax",%progbits
+ 155              		.align	1
+ 156              		.global	BH1750_Reset
+ 157              		.syntax unified
+ 158              		.code	16
+ 159              		.thumb_func
+ 161              	BH1750_Reset:
+ 162              	.LFB49:
+  26:Core/Src/bh1750.c **** 
+  27:Core/Src/bh1750.c **** BH1750_Status BH1750_Reset(BH1750_t *sensor)
+  28:Core/Src/bh1750.c **** {
+ 163              		.loc 1 28 1
+ 164              		.cfi_startproc
+ 165              		@ args = 0, pretend = 0, frame = 16
+ 166              		@ frame_needed = 1, uses_anonymous_args = 0
+ 167 0000 90B5     		push	{r4, r7, lr}
+ 168              	.LCFI6:
+ 169              		.cfi_def_cfa_offset 12
+ 170              		.cfi_offset 4, -12
+ 171              		.cfi_offset 7, -8
+ 172              		.cfi_offset 14, -4
+ 173 0002 87B0     		sub	sp, sp, #28
+ 174              	.LCFI7:
+ 175              		.cfi_def_cfa_offset 40
+ 176 0004 02AF     		add	r7, sp, #8
+ 177              	.LCFI8:
+ 178              		.cfi_def_cfa 7, 32
+ 179 0006 7860     		str	r0, [r7, #4]
+  29:Core/Src/bh1750.c **** 	uint8_t reset = BH1750_RESET;
+ 180              		.loc 1 29 10
+ 181 0008 0F24     		movs	r4, #15
+ 182 000a 3B19     		adds	r3, r7, r4
+ 183 000c 0722     		movs	r2, #7
+ 184 000e 1A70     		strb	r2, [r3]
+  30:Core/Src/bh1750.c **** 	if (HAL_OK != HAL_I2C_Master_Transmit(sensor->BH1750_i2c, sensor->BH1750_ADDR, &reset, 1, TIMEOUT)
+ 185              		.loc 1 30 16
+ 186 0010 7B68     		ldr	r3, [r7, #4]
+ 187 0012 1868     		ldr	r0, [r3]
+ 188 0014 7B68     		ldr	r3, [r7, #4]
+ 189 0016 D988     		ldrh	r1, [r3, #6]
+ 190 0018 3A19     		adds	r2, r7, r4
+ 191 001a 0A23     		movs	r3, #10
+ 192 001c 0093     		str	r3, [sp]
+ 193 001e 0123     		movs	r3, #1
+ 194 0020 FFF7FEFF 		bl	HAL_I2C_Master_Transmit
+ 195 0024 031E     		subs	r3, r0, #0
+ 196              		.loc 1 30 5
+ 197 0026 01D0     		beq	.L10
+  31:Core/Src/bh1750.c **** 		return BH1750_ERROR;
+ 198              		.loc 1 31 10
+ 199 0028 0023     		movs	r3, #0
+ 200 002a 00E0     		b	.L12
+ 201              	.L10:
+  32:Core/Src/bh1750.c **** 
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccpNpXIj.s 			page 5
+
+
+  33:Core/Src/bh1750.c **** 	return BH1750_OK;
+ 202              		.loc 1 33 9
+ 203 002c 0123     		movs	r3, #1
+ 204              	.L12:
+  34:Core/Src/bh1750.c **** }
+ 205              		.loc 1 34 1 discriminator 1
+ 206 002e 1800     		movs	r0, r3
+ 207 0030 BD46     		mov	sp, r7
+ 208 0032 05B0     		add	sp, sp, #20
+ 209              		@ sp needed
+ 210 0034 90BD     		pop	{r4, r7, pc}
+ 211              		.cfi_endproc
+ 212              	.LFE49:
+ 214              		.section	.text.BH1750_setMode,"ax",%progbits
+ 215              		.align	1
+ 216              		.global	BH1750_setMode
+ 217              		.syntax unified
+ 218              		.code	16
+ 219              		.thumb_func
+ 221              	BH1750_setMode:
+ 222              	.LFB50:
+  35:Core/Src/bh1750.c **** 
+  36:Core/Src/bh1750.c **** BH1750_Status BH1750_setMode(BH1750_t *sensor, BH1750_mode mode)
+  37:Core/Src/bh1750.c **** {
+ 223              		.loc 1 37 1
+ 224              		.cfi_startproc
+ 225              		@ args = 0, pretend = 0, frame = 8
+ 226              		@ frame_needed = 1, uses_anonymous_args = 0
+ 227 0000 80B5     		push	{r7, lr}
+ 228              	.LCFI9:
+ 229              		.cfi_def_cfa_offset 8
+ 230              		.cfi_offset 7, -8
+ 231              		.cfi_offset 14, -4
+ 232 0002 84B0     		sub	sp, sp, #16
+ 233              	.LCFI10:
+ 234              		.cfi_def_cfa_offset 24
+ 235 0004 02AF     		add	r7, sp, #8
+ 236              	.LCFI11:
+ 237              		.cfi_def_cfa 7, 16
+ 238 0006 7860     		str	r0, [r7, #4]
+ 239 0008 0A00     		movs	r2, r1
+ 240 000a FB1C     		adds	r3, r7, #3
+ 241 000c 1A70     		strb	r2, [r3]
+  38:Core/Src/bh1750.c **** 
+  39:Core/Src/bh1750.c **** 	//???
+  40:Core/Src/bh1750.c **** 	if (!((mode >> 4) || (mode >> 5)))
+ 242              		.loc 1 40 8
+ 243 000e FB1C     		adds	r3, r7, #3
+ 244 0010 1B78     		ldrb	r3, [r3]
+ 245 0012 1B09     		lsrs	r3, r3, #4
+ 246 0014 DBB2     		uxtb	r3, r3
+ 247              		.loc 1 40 5
+ 248 0016 002B     		cmp	r3, #0
+ 249 0018 07D1     		bne	.L14
+ 250              		.loc 1 40 20 discriminator 1
+ 251 001a FB1C     		adds	r3, r7, #3
+ 252 001c 1B78     		ldrb	r3, [r3]
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccpNpXIj.s 			page 6
+
+
+ 253 001e 5B09     		lsrs	r3, r3, #5
+ 254 0020 DBB2     		uxtb	r3, r3
+ 255              		.loc 1 40 6 discriminator 1
+ 256 0022 002B     		cmp	r3, #0
+ 257 0024 01D1     		bne	.L14
+  41:Core/Src/bh1750.c **** 		return BH1750_ERROR;
+ 258              		.loc 1 41 10
+ 259 0026 0023     		movs	r3, #0
+ 260 0028 1AE0     		b	.L15
+ 261              	.L14:
+  42:Core/Src/bh1750.c **** 	if ((mode & 0x0F) > 3)
+ 262              		.loc 1 42 20
+ 263 002a FB1C     		adds	r3, r7, #3
+ 264 002c 1B78     		ldrb	r3, [r3]
+ 265 002e 1A00     		movs	r2, r3
+ 266 0030 0C23     		movs	r3, #12
+ 267 0032 1340     		ands	r3, r2
+ 268              		.loc 1 42 5
+ 269 0034 01D0     		beq	.L16
+  43:Core/Src/bh1750.c **** 		return BH1750_ERROR;
+ 270              		.loc 1 43 10
+ 271 0036 0023     		movs	r3, #0
+ 272 0038 12E0     		b	.L15
+ 273              	.L16:
+  44:Core/Src/bh1750.c **** 
+  45:Core/Src/bh1750.c **** 	sensor->BH1750_Mode = mode;
+ 274              		.loc 1 45 22
+ 275 003a FB1C     		adds	r3, r7, #3
+ 276 003c 1A78     		ldrb	r2, [r3]
+ 277 003e 7B68     		ldr	r3, [r7, #4]
+ 278 0040 1A71     		strb	r2, [r3, #4]
+  46:Core/Src/bh1750.c **** 	if (HAL_OK != HAL_I2C_Master_Transmit(sensor->BH1750_i2c, sensor->BH1750_ADDR, &mode, 1, TIMEOUT))
+ 279              		.loc 1 46 16
+ 280 0042 7B68     		ldr	r3, [r7, #4]
+ 281 0044 1868     		ldr	r0, [r3]
+ 282 0046 7B68     		ldr	r3, [r7, #4]
+ 283 0048 D988     		ldrh	r1, [r3, #6]
+ 284 004a FA1C     		adds	r2, r7, #3
+ 285 004c 0A23     		movs	r3, #10
+ 286 004e 0093     		str	r3, [sp]
+ 287 0050 0123     		movs	r3, #1
+ 288 0052 FFF7FEFF 		bl	HAL_I2C_Master_Transmit
+ 289 0056 031E     		subs	r3, r0, #0
+ 290              		.loc 1 46 5
+ 291 0058 01D0     		beq	.L17
+  47:Core/Src/bh1750.c **** 		return BH1750_ERROR;
+ 292              		.loc 1 47 10
+ 293 005a 0023     		movs	r3, #0
+ 294 005c 00E0     		b	.L15
+ 295              	.L17:
+  48:Core/Src/bh1750.c **** 
+  49:Core/Src/bh1750.c **** 	return BH1750_OK;
+ 296              		.loc 1 49 9
+ 297 005e 0123     		movs	r3, #1
+ 298              	.L15:
+  50:Core/Src/bh1750.c **** }
+ 299              		.loc 1 50 1
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccpNpXIj.s 			page 7
+
+
+ 300 0060 1800     		movs	r0, r3
+ 301 0062 BD46     		mov	sp, r7
+ 302 0064 02B0     		add	sp, sp, #8
+ 303              		@ sp needed
+ 304 0066 80BD     		pop	{r7, pc}
+ 305              		.cfi_endproc
+ 306              	.LFE50:
+ 308              		.section	.text.BH1750_setMTreg,"ax",%progbits
+ 309              		.align	1
+ 310              		.global	BH1750_setMTreg
+ 311              		.syntax unified
+ 312              		.code	16
+ 313              		.thumb_func
+ 315              	BH1750_setMTreg:
+ 316              	.LFB51:
+  51:Core/Src/bh1750.c **** 
+  52:Core/Src/bh1750.c **** BH1750_Status BH1750_setMTreg(BH1750_t *sensor, uint8_t MTreg)
+  53:Core/Src/bh1750.c **** {
+ 317              		.loc 1 53 1
+ 318              		.cfi_startproc
+ 319              		@ args = 0, pretend = 0, frame = 16
+ 320              		@ frame_needed = 1, uses_anonymous_args = 0
+ 321 0000 90B5     		push	{r4, r7, lr}
+ 322              	.LCFI12:
+ 323              		.cfi_def_cfa_offset 12
+ 324              		.cfi_offset 4, -12
+ 325              		.cfi_offset 7, -8
+ 326              		.cfi_offset 14, -4
+ 327 0002 87B0     		sub	sp, sp, #28
+ 328              	.LCFI13:
+ 329              		.cfi_def_cfa_offset 40
+ 330 0004 02AF     		add	r7, sp, #8
+ 331              	.LCFI14:
+ 332              		.cfi_def_cfa 7, 32
+ 333 0006 7860     		str	r0, [r7, #4]
+ 334 0008 0A00     		movs	r2, r1
+ 335 000a FB1C     		adds	r3, r7, #3
+ 336 000c 1A70     		strb	r2, [r3]
+  54:Core/Src/bh1750.c **** 	// Range of MTreg
+  55:Core/Src/bh1750.c **** 	if (MTreg < (uint8_t)31 || MTreg > (uint8_t)254)
+ 337              		.loc 1 55 5
+ 338 000e FB1C     		adds	r3, r7, #3
+ 339 0010 1B78     		ldrb	r3, [r3]
+ 340 0012 1E2B     		cmp	r3, #30
+ 341 0014 03D9     		bls	.L19
+ 342              		.loc 1 55 26 discriminator 1
+ 343 0016 FB1C     		adds	r3, r7, #3
+ 344 0018 1B78     		ldrb	r3, [r3]
+ 345 001a FF2B     		cmp	r3, #255
+ 346 001c 01D1     		bne	.L20
+ 347              	.L19:
+  56:Core/Src/bh1750.c **** 		return BH1750_ERROR;
+ 348              		.loc 1 56 10
+ 349 001e 0023     		movs	r3, #0
+ 350 0020 37E0     		b	.L24
+ 351              	.L20:
+  57:Core/Src/bh1750.c **** 
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccpNpXIj.s 			page 8
+
+
+  58:Core/Src/bh1750.c **** 	sensor->BH1750_MTreg = MTreg;
+ 352              		.loc 1 58 23
+ 353 0022 7B68     		ldr	r3, [r7, #4]
+ 354 0024 FA1C     		adds	r2, r7, #3
+ 355 0026 1278     		ldrb	r2, [r2]
+ 356 0028 5A71     		strb	r2, [r3, #5]
+  59:Core/Src/bh1750.c **** 
+  60:Core/Src/bh1750.c **** 	// Changing High bit of MTreg
+  61:Core/Src/bh1750.c **** 	uint8_t hBit = (0x40 | (MTreg >> 5));
+ 357              		.loc 1 61 10
+ 358 002a FB1C     		adds	r3, r7, #3
+ 359 002c 1B78     		ldrb	r3, [r3]
+ 360 002e 5B09     		lsrs	r3, r3, #5
+ 361 0030 DBB2     		uxtb	r3, r3
+ 362 0032 4022     		movs	r2, #64
+ 363 0034 1343     		orrs	r3, r2
+ 364 0036 DAB2     		uxtb	r2, r3
+ 365 0038 0F24     		movs	r4, #15
+ 366 003a 3B19     		adds	r3, r7, r4
+ 367 003c 1A70     		strb	r2, [r3]
+  62:Core/Src/bh1750.c **** 	if (HAL_OK != HAL_I2C_Master_Transmit(sensor->BH1750_i2c, sensor->BH1750_ADDR, &hBit, 1, TIMEOUT))
+ 368              		.loc 1 62 16
+ 369 003e 7B68     		ldr	r3, [r7, #4]
+ 370 0040 1868     		ldr	r0, [r3]
+ 371 0042 7B68     		ldr	r3, [r7, #4]
+ 372 0044 D988     		ldrh	r1, [r3, #6]
+ 373 0046 3A19     		adds	r2, r7, r4
+ 374 0048 0A23     		movs	r3, #10
+ 375 004a 0093     		str	r3, [sp]
+ 376 004c 0123     		movs	r3, #1
+ 377 004e FFF7FEFF 		bl	HAL_I2C_Master_Transmit
+ 378 0052 031E     		subs	r3, r0, #0
+ 379              		.loc 1 62 5
+ 380 0054 01D0     		beq	.L22
+  63:Core/Src/bh1750.c **** 		return BH1750_ERROR;
+ 381              		.loc 1 63 10
+ 382 0056 0023     		movs	r3, #0
+ 383 0058 1BE0     		b	.L24
+ 384              	.L22:
+  64:Core/Src/bh1750.c **** 
+  65:Core/Src/bh1750.c **** 	// Changing Low bit of MTreg
+  66:Core/Src/bh1750.c **** 	uint8_t lBit = (0x60 | (MTreg & 0x1F));
+ 385              		.loc 1 66 32
+ 386 005a FB1C     		adds	r3, r7, #3
+ 387 005c 1B78     		ldrb	r3, [r3]
+ 388 005e 5BB2     		sxtb	r3, r3
+ 389 0060 1F22     		movs	r2, #31
+ 390 0062 1340     		ands	r3, r2
+ 391 0064 5BB2     		sxtb	r3, r3
+ 392              		.loc 1 66 23
+ 393 0066 6022     		movs	r2, #96
+ 394 0068 1343     		orrs	r3, r2
+ 395 006a 5BB2     		sxtb	r3, r3
+ 396 006c DAB2     		uxtb	r2, r3
+ 397              		.loc 1 66 10
+ 398 006e 0E24     		movs	r4, #14
+ 399 0070 3B19     		adds	r3, r7, r4
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccpNpXIj.s 			page 9
+
+
+ 400 0072 1A70     		strb	r2, [r3]
+  67:Core/Src/bh1750.c **** 	if (HAL_OK != HAL_I2C_Master_Transmit(sensor->BH1750_i2c, sensor->BH1750_ADDR, &lBit, 1, TIMEOUT))
+ 401              		.loc 1 67 16
+ 402 0074 7B68     		ldr	r3, [r7, #4]
+ 403 0076 1868     		ldr	r0, [r3]
+ 404 0078 7B68     		ldr	r3, [r7, #4]
+ 405 007a D988     		ldrh	r1, [r3, #6]
+ 406 007c 3A19     		adds	r2, r7, r4
+ 407 007e 0A23     		movs	r3, #10
+ 408 0080 0093     		str	r3, [sp]
+ 409 0082 0123     		movs	r3, #1
+ 410 0084 FFF7FEFF 		bl	HAL_I2C_Master_Transmit
+ 411 0088 031E     		subs	r3, r0, #0
+ 412              		.loc 1 67 5
+ 413 008a 01D0     		beq	.L23
+  68:Core/Src/bh1750.c **** 		return BH1750_ERROR;
+ 414              		.loc 1 68 10
+ 415 008c 0023     		movs	r3, #0
+ 416 008e 00E0     		b	.L24
+ 417              	.L23:
+  69:Core/Src/bh1750.c **** 
+  70:Core/Src/bh1750.c **** 	return BH1750_OK;
+ 418              		.loc 1 70 9
+ 419 0090 0123     		movs	r3, #1
+ 420              	.L24:
+  71:Core/Src/bh1750.c **** }
+ 421              		.loc 1 71 1 discriminator 1
+ 422 0092 1800     		movs	r0, r3
+ 423 0094 BD46     		mov	sp, r7
+ 424 0096 05B0     		add	sp, sp, #20
+ 425              		@ sp needed
+ 426 0098 90BD     		pop	{r4, r7, pc}
+ 427              		.cfi_endproc
+ 428              	.LFE51:
+ 430              		.global	__aeabi_i2f
+ 431              		.global	__aeabi_ui2f
+ 432              		.global	__aeabi_fdiv
+ 433              		.global	__aeabi_fmul
+ 434              		.section	.text.BH1750_Read,"ax",%progbits
+ 435              		.align	1
+ 436              		.global	BH1750_Read
+ 437              		.syntax unified
+ 438              		.code	16
+ 439              		.thumb_func
+ 441              	BH1750_Read:
+ 442              	.LFB52:
+  72:Core/Src/bh1750.c **** 
+  73:Core/Src/bh1750.c **** /*
+  74:Core/Src/bh1750.c **** The below formula is to calculate illuminance per 1 count.
+  75:Core/Src/bh1750.c **** 	H-reslution mode : Illuminance per 1 count ( lx / count ) = 1 / 1.2 *( 69 / X )
+  76:Core/Src/bh1750.c **** 	H-reslution mode2 : Illuminance per 1 count ( lx / count ) = 1 / 1.2 *( 69 / X ) / 2
+  77:Core/Src/bh1750.c **** 		1.2 : Measurement accuracy
+  78:Core/Src/bh1750.c **** 		69 : Default value of MTreg ( dec )
+  79:Core/Src/bh1750.c **** 		X : MTreg value
+  80:Core/Src/bh1750.c **** */
+  81:Core/Src/bh1750.c **** 
+  82:Core/Src/bh1750.c **** BH1750_Status BH1750_Read(BH1750_t *sensor, float *result)
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccpNpXIj.s 			page 10
+
+
+  83:Core/Src/bh1750.c **** {
+ 443              		.loc 1 83 1
+ 444              		.cfi_startproc
+ 445              		@ args = 0, pretend = 0, frame = 16
+ 446              		@ frame_needed = 1, uses_anonymous_args = 0
+ 447 0000 90B5     		push	{r4, r7, lr}
+ 448              	.LCFI15:
+ 449              		.cfi_def_cfa_offset 12
+ 450              		.cfi_offset 4, -12
+ 451              		.cfi_offset 7, -8
+ 452              		.cfi_offset 14, -4
+ 453 0002 87B0     		sub	sp, sp, #28
+ 454              	.LCFI16:
+ 455              		.cfi_def_cfa_offset 40
+ 456 0004 02AF     		add	r7, sp, #8
+ 457              	.LCFI17:
+ 458              		.cfi_def_cfa 7, 32
+ 459 0006 7860     		str	r0, [r7, #4]
+ 460 0008 3960     		str	r1, [r7]
+  84:Core/Src/bh1750.c **** 	uint8_t response[2];
+  85:Core/Src/bh1750.c **** 
+  86:Core/Src/bh1750.c **** 	if (HAL_OK != HAL_I2C_Master_Receive(sensor->BH1750_i2c, sensor->BH1750_ADDR, response, 2, TIMEOUT
+ 461              		.loc 1 86 16
+ 462 000a 7B68     		ldr	r3, [r7, #4]
+ 463 000c 1868     		ldr	r0, [r3]
+ 464 000e 7B68     		ldr	r3, [r7, #4]
+ 465 0010 D988     		ldrh	r1, [r3, #6]
+ 466 0012 0C23     		movs	r3, #12
+ 467 0014 FA18     		adds	r2, r7, r3
+ 468 0016 0A23     		movs	r3, #10
+ 469 0018 0093     		str	r3, [sp]
+ 470 001a 0223     		movs	r3, #2
+ 471 001c FFF7FEFF 		bl	HAL_I2C_Master_Receive
+ 472 0020 031E     		subs	r3, r0, #0
+ 473              		.loc 1 86 5
+ 474 0022 01D0     		beq	.L26
+  87:Core/Src/bh1750.c **** 		return BH1750_ERROR;
+ 475              		.loc 1 87 10
+ 476 0024 0023     		movs	r3, #0
+ 477 0026 3FE0     		b	.L30
+ 478              	.L26:
+  88:Core/Src/bh1750.c **** 
+  89:Core/Src/bh1750.c **** 	// High and Low bytes
+  90:Core/Src/bh1750.c **** 	*result = (response[0] << 8) | (response[1]);
+ 479              		.loc 1 90 21
+ 480 0028 0C22     		movs	r2, #12
+ 481 002a BB18     		adds	r3, r7, r2
+ 482 002c 1B78     		ldrb	r3, [r3]
+ 483              		.loc 1 90 25
+ 484 002e 1B02     		lsls	r3, r3, #8
+ 485              		.loc 1 90 42
+ 486 0030 BA18     		adds	r2, r7, r2
+ 487 0032 5278     		ldrb	r2, [r2, #1]
+ 488              		.loc 1 90 31
+ 489 0034 1343     		orrs	r3, r2
+ 490              		.loc 1 90 10
+ 491 0036 1800     		movs	r0, r3
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccpNpXIj.s 			page 11
+
+
+ 492 0038 FFF7FEFF 		bl	__aeabi_i2f
+ 493 003c 021C     		adds	r2, r0, #0
+ 494 003e 3B68     		ldr	r3, [r7]
+ 495 0040 1A60     		str	r2, [r3]
+  91:Core/Src/bh1750.c **** 	*result *= (float)((uint8_t)BH1750_DEFAULT_MTREG / (float)sensor->BH1750_MTreg);
+ 496              		.loc 1 91 10
+ 497 0042 3B68     		ldr	r3, [r7]
+ 498 0044 1C68     		ldr	r4, [r3]
+ 499              		.loc 1 91 66
+ 500 0046 7B68     		ldr	r3, [r7, #4]
+ 501 0048 5B79     		ldrb	r3, [r3, #5]
+ 502              		.loc 1 91 53
+ 503 004a 1800     		movs	r0, r3
+ 504 004c FFF7FEFF 		bl	__aeabi_ui2f
+ 505 0050 031C     		adds	r3, r0, #0
+ 506              		.loc 1 91 13
+ 507 0052 191C     		adds	r1, r3, #0
+ 508 0054 1648     		ldr	r0, .L31
+ 509 0056 FFF7FEFF 		bl	__aeabi_fdiv
+ 510 005a 031C     		adds	r3, r0, #0
+ 511              		.loc 1 91 10
+ 512 005c 191C     		adds	r1, r3, #0
+ 513 005e 201C     		adds	r0, r4, #0
+ 514 0060 FFF7FEFF 		bl	__aeabi_fmul
+ 515 0064 031C     		adds	r3, r0, #0
+ 516 0066 1A1C     		adds	r2, r3, #0
+ 517 0068 3B68     		ldr	r3, [r7]
+ 518 006a 1A60     		str	r2, [r3]
+  92:Core/Src/bh1750.c **** 
+  93:Core/Src/bh1750.c **** 	if (sensor->BH1750_Mode == ONE_TIME_H_RESOLUTION_MODE_2 || sensor->BH1750_Mode == CONTINUOUS_H_RES
+ 519              		.loc 1 93 12
+ 520 006c 7B68     		ldr	r3, [r7, #4]
+ 521 006e 1B79     		ldrb	r3, [r3, #4]
+ 522              		.loc 1 93 5
+ 523 0070 212B     		cmp	r3, #33
+ 524 0072 03D0     		beq	.L28
+ 525              		.loc 1 93 67 discriminator 1
+ 526 0074 7B68     		ldr	r3, [r7, #4]
+ 527 0076 1B79     		ldrb	r3, [r3, #4]
+ 528              		.loc 1 93 58 discriminator 1
+ 529 0078 112B     		cmp	r3, #17
+ 530 007a 0AD1     		bne	.L29
+ 531              	.L28:
+  94:Core/Src/bh1750.c **** 		*result /= 2.0;
+ 532              		.loc 1 94 11
+ 533 007c 3B68     		ldr	r3, [r7]
+ 534 007e 1B68     		ldr	r3, [r3]
+ 535 0080 8021     		movs	r1, #128
+ 536 0082 C905     		lsls	r1, r1, #23
+ 537 0084 181C     		adds	r0, r3, #0
+ 538 0086 FFF7FEFF 		bl	__aeabi_fdiv
+ 539 008a 031C     		adds	r3, r0, #0
+ 540 008c 1A1C     		adds	r2, r3, #0
+ 541 008e 3B68     		ldr	r3, [r7]
+ 542 0090 1A60     		str	r2, [r3]
+ 543              	.L29:
+  95:Core/Src/bh1750.c **** 
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccpNpXIj.s 			page 12
+
+
+  96:Core/Src/bh1750.c **** 	*result /= (float)BH1750_MEASUREMENT_ACCURACY;
+ 544              		.loc 1 96 10
+ 545 0092 3B68     		ldr	r3, [r7]
+ 546 0094 1B68     		ldr	r3, [r3]
+ 547 0096 0749     		ldr	r1, .L31+4
+ 548 0098 181C     		adds	r0, r3, #0
+ 549 009a FFF7FEFF 		bl	__aeabi_fdiv
+ 550 009e 031C     		adds	r3, r0, #0
+ 551 00a0 1A1C     		adds	r2, r3, #0
+ 552 00a2 3B68     		ldr	r3, [r7]
+ 553 00a4 1A60     		str	r2, [r3]
+  97:Core/Src/bh1750.c **** 	return BH1750_OK;
+ 554              		.loc 1 97 9
+ 555 00a6 0123     		movs	r3, #1
+ 556              	.L30:
+  98:Core/Src/bh1750.c **** }...
+ 557              		.loc 1 98 1 discriminator 1
+ 558 00a8 1800     		movs	r0, r3
+ 559 00aa BD46     		mov	sp, r7
+ 560 00ac 05B0     		add	sp, sp, #20
+ 561              		@ sp needed
+ 562 00ae 90BD     		pop	{r4, r7, pc}
+ 563              	.L32:
+ 564              		.align	2
+ 565              	.L31:
+ 566 00b0 00008A42 		.word	1116340224
+ 567 00b4 9A99993F 		.word	1067030938
+ 568              		.cfi_endproc
+ 569              	.LFE52:
+ 571              		.text
+ 572              	.Letext0:
+ 573              		.file 2 "d:\\program files (x86)\\gnu arm embedded toolchain\\10 2021.10\\arm-none-eabi\\include\\
+ 574              		.file 3 "d:\\program files (x86)\\gnu arm embedded toolchain\\10 2021.10\\arm-none-eabi\\include\\
+ 575              		.file 4 "Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l053xx.h"
+ 576              		.file 5 "Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_def.h"
+ 577              		.file 6 "Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_dma.h"
+ 578              		.file 7 "Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_i2c.h"
+ 579              		.file 8 "Core/Inc/bh1750.h"
+ARM GAS  C:\Users\lidka\AppData\Local\Temp\ccpNpXIj.s 			page 13
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 bh1750.c
+C:\Users\lidka\AppData\Local\Temp\ccpNpXIj.s:18     .text.BH1750_Init:00000000 $t
+C:\Users\lidka\AppData\Local\Temp\ccpNpXIj.s:24     .text.BH1750_Init:00000000 BH1750_Init
+C:\Users\lidka\AppData\Local\Temp\ccpNpXIj.s:161    .text.BH1750_Reset:00000000 BH1750_Reset
+C:\Users\lidka\AppData\Local\Temp\ccpNpXIj.s:315    .text.BH1750_setMTreg:00000000 BH1750_setMTreg
+C:\Users\lidka\AppData\Local\Temp\ccpNpXIj.s:221    .text.BH1750_setMode:00000000 BH1750_setMode
+C:\Users\lidka\AppData\Local\Temp\ccpNpXIj.s:98     .text.BH1750_changePowerState:00000000 $t
+C:\Users\lidka\AppData\Local\Temp\ccpNpXIj.s:104    .text.BH1750_changePowerState:00000000 BH1750_changePowerState
+C:\Users\lidka\AppData\Local\Temp\ccpNpXIj.s:155    .text.BH1750_Reset:00000000 $t
+C:\Users\lidka\AppData\Local\Temp\ccpNpXIj.s:215    .text.BH1750_setMode:00000000 $t
+C:\Users\lidka\AppData\Local\Temp\ccpNpXIj.s:309    .text.BH1750_setMTreg:00000000 $t
+C:\Users\lidka\AppData\Local\Temp\ccpNpXIj.s:435    .text.BH1750_Read:00000000 $t
+C:\Users\lidka\AppData\Local\Temp\ccpNpXIj.s:441    .text.BH1750_Read:00000000 BH1750_Read
+C:\Users\lidka\AppData\Local\Temp\ccpNpXIj.s:566    .text.BH1750_Read:000000b0 $d
+
+UNDEFINED SYMBOLS
+HAL_I2C_Master_Transmit
+__aeabi_i2f
+__aeabi_ui2f
+__aeabi_fdiv
+__aeabi_fmul
+HAL_I2C_Master_Receive
