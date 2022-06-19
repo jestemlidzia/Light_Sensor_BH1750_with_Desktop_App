@@ -1,3 +1,19 @@
+/*
+* bh1750.c
+* While working on the file, an implementation by Mateusz Salamon was used under the MIT license:
+*
+* The MIT License.
+* Created on: 02.12.2018
+* Author: Mateusz Salamon
+* www.msalamon.pl
+* mateusz@msalamon.pl
+*
+* https://msalamon.pl/pomiar-natezenia-swiatla-z-wykorzystaniem-stm32/
+* https://github.com/lamik/Light_Sensors_STM32
+*
+* The code was modified by Lidia Wisniewska & Aleksandra Krol.
+*/
+
 #include "bh1750.h"
 #include <stdint.h>
 

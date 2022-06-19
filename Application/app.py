@@ -15,6 +15,7 @@ import serial
 import signal
 
 from threading import Timer
+from functools import partial
 
 from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QImage, QPalette, QBrush
@@ -36,6 +37,7 @@ class MyWindow(QMainWindow):
         self.flag = 0
         self.box_flag = 0
         self.freq = 1
+        self.modified = 0
 
         self.text_update('Connect your device to use this app',1)
 
@@ -59,7 +61,12 @@ class MyWindow(QMainWindow):
 
         self.adjust_btn = self.findChild(QtWidgets.QPushButton, "adjustbtn")
         self.adjust_btn.clicked.connect(self.onetime_adjust)
-
+        self.increase_btn = self.findChild(QtWidgets.QPushButton, "increasebtn")
+        self.increase_btn.clicked.connect(self.inc)
+        # self.increase_btn.clicked.connect(lambda: self.modified(1))
+        self.decrease_btn = self.findChild(QtWidgets.QPushButton, "decreasebtn")
+        self.decrease_btn.clicked.connect(self.dec)
+        # self.decrease_btn.clicked.connect(partial(self.modified, 2))
 
         # Labels
         self.connect_label = self.findChild(QtWidgets.QLabel, "connect_your_device")
@@ -100,6 +107,23 @@ class MyWindow(QMainWindow):
         else:
             self.text_update('To choose this option click the CONNECT button',1)
 
+    def inc(self):
+        if self.flag == 1:
+            self.flag ==3
+            com = "incSens\n"
+            self.ser.write(com.encode())
+            self.text_update(self.ser.readline().decode('utf-8'),1)
+            self.flag = 1
+
+    def dec(self):
+        if self.flag == 1:
+            self.flag ==3
+            com = "decSens\n"
+            self.ser.write(com.encode())
+            self.text_update(self.ser.readline().decode('utf-8'),1)
+            self.flag = 1
+
+
     def screen_b(self):
         threading.Timer(self.freq, self.screen_b).start()
         if self.flag==0:
@@ -133,8 +157,12 @@ class MyWindow(QMainWindow):
                     endl = data_string.replace(";", "\n")
                     self.text_update(endl,2)
                     print(endl)
-                else:        
-                    self.text_update(data_string,2)
+                else: 
+                    if self.modified == 1:
+                        self.text_update(data_string,1) 
+                        self.modified = 0
+                    else:         
+                        self.text_update(data_string,2)
                     # print("valuee: ", data_string)
                     self.flag = 1
 
